@@ -9,4 +9,4 @@ redirect_from:
 ---
 
 
-Currently, I am pursuing my Ph.D. at the MMLAB, CUHK. 
+I’m a Junior now at School of Artificial Intelligence, Nanjing University. 
