@@ -15,7 +15,7 @@
   <meta name="author" content="Ke Wang" />
   <meta name="description"
     content="ICLR, 2024; Ke Wang, Houxing Ren, Aojun Zhou, Zimu Lu, Sichun Luo, Weikang Shi, Renrui Zhang, Linqi Song, Mingjie Zhan, Hongsheng Li" />
-  <link rel="alternate" hreflang="en-us" href="/publications/4_acl2024_mathgenie/" />
+  <link rel="alternate" hreflang="en-us" href="/publications/5_iclr2025_scdpo/" />
   <meta name="theme-color" content="#1565c0" />
   <link rel="stylesheet" href="/css/vendor-bundle.min.f1ecf783c14edc00c9320c205831ad8e.css" media="print"
     onload="this.media='all'">
@@ -29,12 +29,12 @@
   <link rel="stylesheet" href="/css/wowchemy.697f01b152168f0453beb35133e9d9b7.css" />
   <link rel="icon" type="image/png" href="main.png" />
   <link rel="apple-touch-icon" type="image/png" href="main.png" />
-  <link rel="canonical" href="/publications/4_acl2024_mathgenie/" />
+  <link rel="canonical" href="/publications/5_iclr2025_scdpo/" />
   <meta property="twitter:card" content="summary_large_image" />
   <meta property="og:site_name" content="Ke Wang's Homepage" />
-  <meta property="og:url" content="/publications/4_acl2024_mathgenie/" />
-  <meta property="og:title"
-    content="MathGenie: Generating Synthetic Data with Question Back-translation for Enhancing Mathematical Reasoning of LLMs | Ke Wang's Homepage" />
+  <meta property="og:url" content="/publications/5_iclr2025_scdpo/" />
+  <meta property="og:title" content="Step-Controlled DPO: Leveraging Stepwise Errors for
+                      Enhancing Mathematical Reasoning of Language Models | Ke Wang's Homepage" />
   <meta property="og:description"
     content="ICLR, 2024; Ke Wang, Houxing Ren, Aojun Zhou, Zimu Lu, Sichun Luo, Weikang Shi, Renrui Zhang, Linqi Song, Mingjie Zhan, Hongsheng Li" />
   <meta property="og:image" content="main.png" />
@@ -43,8 +43,10 @@
   <meta property="article:published_time" content="2020-07-03T00:03:00&#43;00:00" />
   <meta property="article:modified_time" content="2020-07-04T00:00:00&#43;00:00">
   <script
-    type="application/ld+json">{  "@context": "https://schema.org",  "@type": "Article",  "mainEntityOfPage": {    "@type": "WebPage",    "@id": "/publications/4_acl2024_mathgenie/"  },  "headline": "MathGenie: Generating Synthetic Data with Question Back-translation for Enhancing Mathematical Reasoning of LLMs | Ke Wang's Homepage",    "image": [    "/publications/4_acl2024_mathgenie/main.png"  ],    "datePublished": "2020-07-03T00:03:00Z",  "dateModified": "2020-07-04T00:00:00Z",    "author": {    "@type": "Person",    "name": "Ke Wang"  },    "publisher": {    "@type": "Organization",    "name": "Ke Wang's Homepage",    "logo": {      "@type": "ImageObject",      "url": "/authors/icon_192.png"    }  },  "description": "ICLR, 2024; Ke Wang, Houxing Ren, Aojun Zhou, Zimu Lu, Sichun Luo, Weikang Shi, Renrui Zhang, Linqi Song, Mingjie Zhan, Hongsheng Li"}</script>
-  <title>MathGenie: Generating Synthetic Data with Question Back-translation for Enhancing Mathematical Reasoning of LLMs | Ke Wang's Homepage
+    type="application/ld+json">{  "@context": "https://schema.org",  "@type": "Article",  "mainEntityOfPage": {    "@type": "WebPage",    "@id": "/publications/5_iclr2025_scdpo/"  },  "headline": "Step-Controlled DPO: Leveraging Stepwise Errors for
+                      Enhancing Mathematical Reasoning of Language Models | Ke Wang's Homepage",    "image": [    "/publications/5_iclr2025_scdpo/main.png"  ],    "datePublished": "2020-07-03T00:03:00Z",  "dateModified": "2020-07-04T00:00:00Z",    "author": {    "@type": "Person",    "name": "Ke Wang"  },    "publisher": {    "@type": "Organization",    "name": "Ke Wang's Homepage",    "logo": {      "@type": "ImageObject",      "url": "/authors/icon_192.png"    }  },  "description": "ICLR, 2024; Ke Wang, Houxing Ren, Aojun Zhou, Zimu Lu, Sichun Luo, Weikang Shi, Renrui Zhang, Linqi Song, Mingjie Zhan, Hongsheng Li"}</script>
+  <title>Step-Controlled DPO: Leveraging Stepwise Errors for
+    Enhancing Mathematical Reasoning of Language Models | Ke Wang's Homepage
   </title>
 </head>
 
@@ -103,15 +105,16 @@
   <div class="page-body">
     <div class="pub">
       <div class="article-container pt-3">
-        <h1>MathGenie: Generating Synthetic Data with Question Back-translation for Enhancing Mathematical Reasoning of LLMs</h1>
+        <h1>Step-Controlled DPO: Leveraging Stepwise Errors for
+          Enhancing Mathematical Reasoning of Language Models</h1>
         <div class="article-metadata"> <span class="article-date"> Mar 2024 </span></div>
         <div class="btn-links mb-3">
           <a href="#" class="btn btn-outline-primary btn-page-header js-cite-modal" data-filename="cite.bib">
             Cite
           </a>
-          <a class="btn btn-outline-primary btn-page-header" href="https://mathgenie.github.io/" target="_blank"
+          <a class="btn btn-outline-primary btn-page-header" href="https://arxiv.org/abs/2407.00782" target="_blank"
             rel="noopener">
-            Project Page
+            arXiv
           </a>
         </div>
       </div>
@@ -122,13 +125,22 @@
       </div>
       <div class="article-container">
         <h3>Abstract</h3>
-        <p class="pub-abstract">Large language models (LLMs) have exhibited great potential in mathematical reasoning. However, there remains a performance gap in this area between existing open-source models and closed-source models such as GPT-4. In this paper, we introduce MathGenie, a novel method for generating diverse and reliable math problems from a small-scale problem-solution dataset (denoted as seed data). We augment the ground-truth solutions of our seed data and train a back-translation model to translate the augmented solutions back into new questions. Subsequently, we generate code-integrated solutions for the new questions. To ensure the correctness of the code-integrated solutions, we employ rationale-based strategy for solution verification. Various pretrained models, ranging from 7B to 70B, are trained on the newly curated data to test the effectiveness of the proposed augmentation technique, resulting in a family of models known as MathGenieLM. These models consistently outperform previous open-source models across five representative mathematical reasoning datasets, achieving state-of-the-art performance. In particular, MathGenieLM-InternLM2 achieves an accuracy of 87.7% on GSM8K and 55.7% on MATH, securing the best overall score among open-source language models.</p>
+        <p class="pub-abstract">Direct Preference Optimization (DPO) has proven effective at improving the performance
+          of large language models (LLMs) on downstream tasks such as reasoning and alignment. In this work, we propose
+          Step-Controlled DPO (SCDPO), a method for automatically providing stepwise error supervision by creating
+          negative samples of mathematical reasoning rationales that start making errors at a specified step. By
+          applying these samples in DPO training, SCDPO can better align the model to avoid reasoning errors and output
+          accurate reasoning steps. Qualitative analysis of the credit assignment of SCDPO and DPO demonstrates the
+          effectiveness of SCDPO at identifying errors in mathematical solutions. We then apply SCDPO to an
+          InternLM2-20B model, resulting in a 20B model that achieves competitive scores of 88.5% on GSM8K and 58.1% on
+          MATH, rivaling all other open-source LLMs, showing the great potential of our method. The code, models and
+          data are released to inspire future work.</p>
         <div class="row">
           <div class="col-md-1"></div>
           <div class="col-md-10">
             <div class="row">
               <div class="col-12 col-md-3 pub-row-heading">Type</div>
-              <div class="col-12 col-md-9"> <a href="/publications/#conference"> Conference paper </a> </div>
+              <div class="col-12 col-md-9"> <a href="/publications/#report"> Report </a> </div>
             </div>
           </div>
           <div class="col-md-1"></div>
@@ -150,30 +162,27 @@
         <div class="article-style">
           <div class="share-box">
             <ul class="share">
+              <li> <a href="https://twitter.com/intent/tweet?url=wangk.org/publications/4_acl2024_mathgenie&text=Step-Controlled DPO: Leveraging Stepwise Errors for
+                      Enhancing Mathematical Reasoning of Language Models" target="_blank" rel="noopener"
+                  class="share-btn-twitter" aria-label="twitter"> <i class="fab fa-twitter"></i> </a> </li>
+              <li> <a href="https://www.facebook.com/sharer.php?u=wangk.org/publications/4_acl2024_mathgenie/&t=Step-Controlled DPO: Leveraging Stepwise Errors for
+                      Enhancing Mathematical Reasoning of Language Models" target="_blank" rel="noopener"
+                  class="share-btn-facebook" aria-label="facebook"> <i class="fab fa-facebook"></i> </a> </li>
               <li> <a
-                  href="https://twitter.com/intent/tweet?url=wangk.org/publications/4_acl2024_mathgenie&text=MathGenie: Generating Synthetic Data with Question Back-translation for Enhancing Mathematical Reasoning of LLMs"
-                  target="_blank" rel="noopener" class="share-btn-twitter" aria-label="twitter"> <i
-                    class="fab fa-twitter"></i> </a> </li>
-              <li> <a
-                  href="https://www.facebook.com/sharer.php?u=wangk.org/publications/4_acl2024_mathgenie/&t=MathGenie: Generating Synthetic Data with Question Back-translation for Enhancing Mathematical Reasoning of LLMs"
-                  target="_blank" rel="noopener" class="share-btn-facebook" aria-label="facebook"> <i
-                    class="fab fa-facebook"></i> </a> </li>
-              <li> <a
-                  href="mailto:?subject=MathGenie: Generating Synthetic Data with Question Back-translation for Enhancing Mathematical Reasoning of LLMs&body=wangk.org/publications/4_acl2024_mathgenie/"
+                  href="mailto:?subject=Step-Controlled DPO: Leveraging Stepwise Errors for
+                      Enhancing Mathematical Reasoning of Language Models&body=wangk.org/publications/4_acl2024_mathgenie/"
                   target="_blank" rel="noopener" class="share-btn-email" aria-label="envelope"> <i
                     class="fas fa-envelope"></i> </a> </li>
-              <li> <a
-                  href="https://www.linkedin.com/shareArticle?url=wangk.org/publications/4_acl2024_mathgenie/&title=MathGenie: Generating Synthetic Data with Question Back-translation for Enhancing Mathematical Reasoning of LLMs"
-                  target="_blank" rel="noopener" class="share-btn-linkedin" aria-label="linkedin-in"> <i
-                    class="fab fa-linkedin-in"></i> </a> </li>
-              <li> <a
-                  href="whatsapp://send?text=MathGenie: Generating Synthetic Data with Question Back-translation for Enhancing Mathematical Reasoning of LLMs wangk.org/publications/4_acl2024_mathgenie/"
+              <li> <a href="https://www.linkedin.com/shareArticle?url=wangk.org/publications/4_acl2024_mathgenie/&title=Step-Controlled DPO: Leveraging Stepwise Errors for
+                      Enhancing Mathematical Reasoning of Language Models" target="_blank" rel="noopener"
+                  class="share-btn-linkedin" aria-label="linkedin-in"> <i class="fab fa-linkedin-in"></i> </a> </li>
+              <li> <a href="whatsapp://send?text=Step-Controlled DPO: Leveraging Stepwise Errors for
+                      Enhancing Mathematical Reasoning of Language Models wangk.org/publications/4_acl2024_mathgenie/"
                   target="_blank" rel="noopener" class="share-btn-whatsapp" aria-label="whatsapp"> <i
                     class="fab fa-whatsapp"></i> </a> </li>
-              <li> <a
-                  href="https://service.weibo.com/share/share.php?url=wangk.org/publications/4_acl2024_mathgenie/&title=MathGenie: Generating Synthetic Data with Question Back-translation for Enhancing Mathematical Reasoning of LLMs"
-                  target="_blank" rel="noopener" class="share-btn-weibo" aria-label="weibo"> <i
-                    class="fab fa-weibo"></i>
+              <li> <a href="https://service.weibo.com/share/share.php?url=wangk.org/publications/4_acl2024_mathgenie/&title=Step-Controlled DPO: Leveraging Stepwise Errors for
+                      Enhancing Mathematical Reasoning of Language Models" target="_blank" rel="noopener"
+                  class="share-btn-weibo" aria-label="weibo"> <i class="fab fa-weibo"></i>
                 </a> </li>
             </ul>
           </div>
@@ -190,7 +199,6 @@
             </ul>
           </div>
           <div class="article-tags"> <a class="badge badge-light" href="/publications/">Full list</a> </div>
-
         </div>
       </div>
     </div>

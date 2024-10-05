@@ -1,8 +1,23 @@
-@misc{lu2024mathgenie,
-  title         = {MathGenie: Generating Synthetic Data with Question Back-translation for Enhancing Mathematical Reasoning of LLMs},
-  author        = {Zimu Lu and Aojun Zhou and Houxing Ren and Ke Wang and Weikang Shi and Junting Pan and Mingjie Zhan and Hongsheng Li},
-  year          = {2024},
-  eprint        = {2402.16352},
-  archiveprefix = {arXiv},
-  primaryclass  = {cs.CL}
+@inproceedings{lu-etal-2024-mathgenie,
+    title = "{M}ath{G}enie: Generating Synthetic Data with Question Back-translation for Enhancing Mathematical Reasoning of {LLM}s",
+    author = "Lu, Zimu  and
+      Zhou, Aojun  and
+      Ren, Houxing  and
+      Wang, Ke  and
+      Shi, Weikang  and
+      Pan, Junting  and
+      Zhan, Mingjie  and
+      Li, Hongsheng",
+    editor = "Ku, Lun-Wei  and
+      Martins, Andre  and
+      Srikumar, Vivek",
+    booktitle = "Proceedings of the 62nd Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers)",
+    month = aug,
+    year = "2024",
+    address = "Bangkok, Thailand",
+    publisher = "Association for Computational Linguistics",
+    url = "https://aclanthology.org/2024.acl-long.151",
+    doi = "10.18653/v1/2024.acl-long.151",
+    pages = "2732--2747",
+    abstract = "Large language models (LLMs) have exhibited great potential in mathematical reasoning. However, there remains a performance gap in this area between existing open-source models and closed-source models such as GPT-4. In this paper, we introduce MathGenie, a novel method for generating diverse and reliable math problems by leveraging the ground-truth solutions of the seed data. We augment these ground-truth solutions and use a specially finetuned model to translate these augmented solutions back into new questions. Subsequently, we generate code-integrated solutions for these questions. To ensure the correctness of the code-integrated solutions, we employ rationale-based verification for filtering. Then, we finetune various pretrained models, ranging from 7B to 70B, on the newly curated data, resulting in a family of models known as MathGenie. These models consistently outperform previous open-source models across five representative mathematical reasoning datasets, achieving state-of-the-art performance. In particular, MathGenie-InternLM2 achieves an accuracy of 87.7{\%} on GSM8K and 55.7{\%} on MATH, securing the best overall score.",
 }
