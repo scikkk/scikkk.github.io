@@ -58,7 +58,7 @@ git clone [GitHub仓库的URL]
   如果网站不是用Jekyll生成的，你可能需要一个简单的HTTP服务器。例如，你可以使用Python的简易HTTP服务器。在Python 3中，你可以在仓库的根目录运行以下命令来启动一个服务器：
 
   ```bash
-  python -m http.server
+  python3 -m http.server
   ```
 
   这通常会在 `http://localhost:8000` 启动服务器。
