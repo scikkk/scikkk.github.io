@@ -849,4 +849,24 @@
         flex: 0 0 40%;
         max-width: 40%;
     }
+
+    @media (max-width: 768px) {
+        .goods-list {
+            display: flex;
+            flex-wrap: wrap;
+            margin: 0 -4px;
+        }
+
+        .goods-item {
+            width: 50% !important;
+            box-sizing: border-box;
+            padding: 4px;
+        }
+
+        @media (max-width: 480px) {
+            .goods-item {
+                width: 100% !important;
+            }
+        }
+    }
 </style>
