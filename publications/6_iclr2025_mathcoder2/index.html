@@ -15,7 +15,7 @@
   <meta name="author" content="Ke Wang" />
   <meta name="description"
     content="ICLR, 2024; Ke Wang, Houxing Ren, Aojun Zhou, Zimu Lu, Sichun Luo, Weikang Shi, Renrui Zhang, Linqi Song, Mingjie Zhan, Hongsheng Li" />
-  <link rel="alternate" hreflang="en-us" href="/publications/4_acl2024_mathgenie/" />
+  <link rel="alternate" hreflang="en-us" href="/publications/6_iclr2025_mathcoder2/" />
   <meta name="theme-color" content="#1565c0" />
   <link rel="stylesheet" href="/css/vendor-bundle.min.f1ecf783c14edc00c9320c205831ad8e.css" media="print"
     onload="this.media='all'">
@@ -29,12 +29,12 @@
   <link rel="stylesheet" href="/css/wowchemy.697f01b152168f0453beb35133e9d9b7.css" />
   <link rel="icon" type="image/png" href="main.png" />
   <link rel="apple-touch-icon" type="image/png" href="main.png" />
-  <link rel="canonical" href="/publications/4_acl2024_mathgenie/" />
+  <link rel="canonical" href="/publications/6_iclr2025_mathcoder2/" />
   <meta property="twitter:card" content="summary_large_image" />
   <meta property="og:site_name" content="Ke Wang's Homepage" />
-  <meta property="og:url" content="/publications/4_acl2024_mathgenie/" />
+  <meta property="og:url" content="/publications/6_iclr2025_mathcoder2/" />
   <meta property="og:title"
-    content="MathGenie: Generating Synthetic Data with Question Back-translation for Enhancing Mathematical Reasoning of LLMs | Ke Wang's Homepage" />
+    content="MathCoder2: Better Math Reasoning from Continued Pretraining on Model-translated Mathematical Code | Ke Wang's Homepage" />
   <meta property="og:description"
     content="ICLR, 2024; Ke Wang, Houxing Ren, Aojun Zhou, Zimu Lu, Sichun Luo, Weikang Shi, Renrui Zhang, Linqi Song, Mingjie Zhan, Hongsheng Li" />
   <meta property="og:image" content="main.png" />
@@ -43,8 +43,9 @@
   <meta property="article:published_time" content="2020-07-03T00:03:00&#43;00:00" />
   <meta property="article:modified_time" content="2020-07-04T00:00:00&#43;00:00">
   <script
-    type="application/ld+json">{  "@context": "https://schema.org",  "@type": "Article",  "mainEntityOfPage": {    "@type": "WebPage",    "@id": "/publications/4_acl2024_mathgenie/"  },  "headline": "MathGenie: Generating Synthetic Data with Question Back-translation for Enhancing Mathematical Reasoning of LLMs | Ke Wang's Homepage",    "image": [    "/publications/4_acl2024_mathgenie/main.png"  ],    "datePublished": "2020-07-03T00:03:00Z",  "dateModified": "2020-07-04T00:00:00Z",    "author": {    "@type": "Person",    "name": "Ke Wang"  },    "publisher": {    "@type": "Organization",    "name": "Ke Wang's Homepage",    "logo": {      "@type": "ImageObject",      "url": "/authors/icon_192.png"    }  },  "description": "ICLR, 2024; Ke Wang, Houxing Ren, Aojun Zhou, Zimu Lu, Sichun Luo, Weikang Shi, Renrui Zhang, Linqi Song, Mingjie Zhan, Hongsheng Li"}</script>
-  <title>MathGenie: Generating Synthetic Data with Question Back-translation for Enhancing Mathematical Reasoning of LLMs | Ke Wang's Homepage
+    type="application/ld+json">{  "@context": "https://schema.org",  "@type": "Article",  "mainEntityOfPage": {    "@type": "WebPage",    "@id": "/publications/6_iclr2025_mathcoder2/"  },  "headline": "MathCoder2: Better Math Reasoning from Continued Pretraining on Model-translated Mathematical Code | Ke Wang's Homepage",    "image": [    "/publications/6_iclr2025_mathcoder2/main.png"  ],    "datePublished": "2020-07-03T00:03:00Z",  "dateModified": "2020-07-04T00:00:00Z",    "author": {    "@type": "Person",    "name": "Ke Wang"  },    "publisher": {    "@type": "Organization",    "name": "Ke Wang's Homepage",    "logo": {      "@type": "ImageObject",      "url": "/authors/icon_192.png"    }  },  "description": "ICLR, 2024; Ke Wang, Houxing Ren, Aojun Zhou, Zimu Lu, Sichun Luo, Weikang Shi, Renrui Zhang, Linqi Song, Mingjie Zhan, Hongsheng Li"}</script>
+  <title>MathCoder2: Better Math Reasoning from Continued Pretraining on Model-translated Mathematical Code | Ke Wang's
+    Homepage
   </title>
 </head>
 
@@ -103,15 +104,19 @@
   <div class="page-body">
     <div class="pub">
       <div class="article-container pt-3">
-        <h1>MathGenie: Generating Synthetic Data with Question Back-translation for Enhancing Mathematical Reasoning of LLMs</h1>
-        <div class="article-metadata"> <span class="article-date"> Mar 2024 </span></div>
+        <h1>MathCoder2: Better Math Reasoning from Continued Pretraining on Model-translated Mathematical Code</h1>
+        <div class="article-metadata"> <span class="article-date"> Sep 2024 </span></div>
         <div class="btn-links mb-3">
           <a href="#" class="btn btn-outline-primary btn-page-header js-cite-modal" data-filename="cite.bib">
             Cite
           </a>
-          <a class="btn btn-outline-primary btn-page-header" href="https://mathgenie.github.io/" target="_blank"
-            rel="noopener">
+          <a class="btn btn-outline-primary btn-page-header" href="https://mathllm.github.io/mathcoder2/"
+            target="_blank" rel="noopener">
             Project Page
+          </a>
+          <a class="btn btn-outline-primary btn-page-header" href="https://github.com/mathllm/MathCoder2"
+            target="_blank" rel="noopener">
+            Code
           </a>
         </div>
       </div>
@@ -122,13 +127,29 @@
       </div>
       <div class="article-container">
         <h3>Abstract</h3>
-        <p class="pub-abstract">Large language models (LLMs) have exhibited great potential in mathematical reasoning. However, there remains a performance gap in this area between existing open-source models and closed-source models such as GPT-4. In this paper, we introduce MathGenie, a novel method for generating diverse and reliable math problems from a small-scale problem-solution dataset (denoted as seed data). We augment the ground-truth solutions of our seed data and train a back-translation model to translate the augmented solutions back into new questions. Subsequently, we generate code-integrated solutions for the new questions. To ensure the correctness of the code-integrated solutions, we employ rationale-based strategy for solution verification. Various pretrained models, ranging from 7B to 70B, are trained on the newly curated data to test the effectiveness of the proposed augmentation technique, resulting in a family of models known as MathGenieLM. These models consistently outperform previous open-source models across five representative mathematical reasoning datasets, achieving state-of-the-art performance. In particular, MathGenieLM-InternLM2 achieves an accuracy of 87.7% on GSM8K and 55.7% on MATH, securing the best overall score among open-source language models.</p>
+        <p class="pub-abstract">Code has been shown to be effective in enhancing the mathematical reasoning abilities of
+          large language models due to its precision and accuracy. Previous works involving continued mathematical
+          pretraining often include code that utilizes math-related packages, which are primarily designed for fields
+          such as engineering, machine learning, signal processing, or module testing, rather than being directly
+          focused on mathematical reasoning. In this paper, we introduce a novel method for generating mathematical code
+          accompanied with corresponding reasoning steps for continued pretraining. Our approach begins with the
+          construction of a high-quality mathematical continued pretraining dataset by incorporating math-related web
+          data, code using mathematical packages, math textbooks, and synthetic data. Next, we construct reasoning steps
+          by extracting LaTeX expressions, the conditions needed for the expressions, and the results of the expressions
+          from the previously collected dataset. Based on this extracted information, we generate corresponding code to
+          accurately capture the mathematical reasoning process. Appending the generated code to each reasoning step
+          results in data consisting of paired natural language reasoning steps and their corresponding code. Combining
+          this data with the original dataset results in a 19.2B-token high-performing mathematical pretraining corpus,
+          which we name MathCode-Pile. Training several popular base models with this corpus significantly improves
+          their mathematical abilities, leading to the creation of the MathCoder2 family of models. All of our data
+          processing and training code is open-sourced, ensuring full transparency and easy reproducibility of the
+          entire data collection and training pipeline.</p>
         <div class="row">
           <div class="col-md-1"></div>
           <div class="col-md-10">
             <div class="row">
               <div class="col-12 col-md-3 pub-row-heading">Type</div>
-              <div class="col-12 col-md-9"> <a href="/publications/#conference"> Conference paper </a> </div>
+              <div class="col-12 col-md-9"> <a href="/publications/#report"> Report </a> </div>
             </div>
           </div>
           <div class="col-md-1"></div>
@@ -151,27 +172,27 @@
           <div class="share-box">
             <ul class="share">
               <li> <a
-                  href="https://twitter.com/intent/tweet?url=wangk.org/publications/4_acl2024_mathgenie&text=MathGenie: Generating Synthetic Data with Question Back-translation for Enhancing Mathematical Reasoning of LLMs"
+                  href="https://twitter.com/intent/tweet?url=wangk.org/publications/6_iclr2025_mathcoder2&text=MathCoder2: Better Math Reasoning from Continued Pretraining on Model-translated Mathematical Code"
                   target="_blank" rel="noopener" class="share-btn-twitter" aria-label="twitter"> <i
                     class="fab fa-twitter"></i> </a> </li>
               <li> <a
-                  href="https://www.facebook.com/sharer.php?u=wangk.org/publications/4_acl2024_mathgenie/&t=MathGenie: Generating Synthetic Data with Question Back-translation for Enhancing Mathematical Reasoning of LLMs"
+                  href="https://www.facebook.com/sharer.php?u=wangk.org/publications/6_iclr2025_mathcoder2/&t=MathCoder2: Better Math Reasoning from Continued Pretraining on Model-translated Mathematical Code"
                   target="_blank" rel="noopener" class="share-btn-facebook" aria-label="facebook"> <i
                     class="fab fa-facebook"></i> </a> </li>
               <li> <a
-                  href="mailto:?subject=MathGenie: Generating Synthetic Data with Question Back-translation for Enhancing Mathematical Reasoning of LLMs&body=wangk.org/publications/4_acl2024_mathgenie/"
+                  href="mailto:?subject=MathCoder2: Better Math Reasoning from Continued Pretraining on Model-translated Mathematical Code&body=wangk.org/publications/6_iclr2025_mathcoder2/"
                   target="_blank" rel="noopener" class="share-btn-email" aria-label="envelope"> <i
                     class="fas fa-envelope"></i> </a> </li>
               <li> <a
-                  href="https://www.linkedin.com/shareArticle?url=wangk.org/publications/4_acl2024_mathgenie/&title=MathGenie: Generating Synthetic Data with Question Back-translation for Enhancing Mathematical Reasoning of LLMs"
+                  href="https://www.linkedin.com/shareArticle?url=wangk.org/publications/6_iclr2025_mathcoder2/&title=MathCoder2: Better Math Reasoning from Continued Pretraining on Model-translated Mathematical Code"
                   target="_blank" rel="noopener" class="share-btn-linkedin" aria-label="linkedin-in"> <i
                     class="fab fa-linkedin-in"></i> </a> </li>
               <li> <a
-                  href="whatsapp://send?text=MathGenie: Generating Synthetic Data with Question Back-translation for Enhancing Mathematical Reasoning of LLMs wangk.org/publications/4_acl2024_mathgenie/"
+                  href="whatsapp://send?text=MathCoder2: Better Math Reasoning from Continued Pretraining on Model-translated Mathematical Code wangk.org/publications/6_iclr2025_mathcoder2/"
                   target="_blank" rel="noopener" class="share-btn-whatsapp" aria-label="whatsapp"> <i
                     class="fab fa-whatsapp"></i> </a> </li>
               <li> <a
-                  href="https://service.weibo.com/share/share.php?url=wangk.org/publications/4_acl2024_mathgenie/&title=MathGenie: Generating Synthetic Data with Question Back-translation for Enhancing Mathematical Reasoning of LLMs"
+                  href="https://service.weibo.com/share/share.php?url=wangk.org/publications/6_iclr2025_mathcoder2/&title=MathCoder2: Better Math Reasoning from Continued Pretraining on Model-translated Mathematical Code"
                   target="_blank" rel="noopener" class="share-btn-weibo" aria-label="weibo"> <i
                     class="fab fa-weibo"></i>
                 </a> </li>

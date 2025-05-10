@@ -2,8 +2,8 @@
   "name": "Ke Wang&#39;s Homepage",
   "short_name": "Ke Wang&#39;s Homepage",
   "lang": "en-us",
-  "theme_color": "#1565c0",
-  "background_color": "#1565c0",
+  "theme_color": "#156500",
+  "background_color": "#156500",
   "icons": [{
     "src": "/authors/icon_192.png",
     "sizes": "192x192",
