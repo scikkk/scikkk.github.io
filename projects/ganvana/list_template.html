@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>系统标本 --- 冈瓦纳自然网</title>
+		<meta charset="utf-8" />
+		<meta name="mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+		<meta name="renderer" content="webkit" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui" />
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+		<meta name="apple-mobile-web-app-title" content="冈瓦纳自然网" />
+		<link rel="icon" href="/img/favicon.ico" type="image/gif" >
+		<link href="/css/googleFont/font.css" rel="stylesheet">
+		<link href="/css/zmdi/material-design-iconic-font.min.css" rel="stylesheet" />
+		<link href="/css/animate.css" rel="stylesheet">
+		<link rel='stylesheet' href='/css/style.css' />
+		<script src="/js/jquery.min.js"></script>
+		<script src="/js/qs.js"></script>
+		<script src="/js/vue.js"></script>
+		<script src="/js/common.js"></script>
+	</head>
+	<body>
+		<header>
+			<div class="container">
+				<div class="logo">
+					<a href="/">
+						<img src="/img/logo.png" alt="">
+					</a>					
+					<div class="slogan">请欣赏可购买的贝壳标本</div>
+				<div>
+				<div class="header-right">
+					<ul>
+						<!-- <li><a href="">微信公众号</a></li> -->
+						
+							<li><a href="/reg">注册</a></li>
+							<li><a href="/login">登录</a></li>
+						
+					</ul>
+				</div>
+			</div>
+		</header>
+		<nav class="nav-bar">
+			<ul class="container nav-list">
+				<li class="nav-item">
+					<a id="navIndex" href="/">首页</a>
+				</li>
+				<li class="nav-item">
+					<a id="navGanvana" href="/ganvana">冈瓦纳</a>
+				</li>
+				<li class="nav-item">
+					<a id="navVideo" href="/video/list/1">科普视频</a>
+				</li>
+				<li class="nav-item">
+					<a id="navAcitivity" href="/activity/list/1">活动报名</a>
+				</li>
+				<li class="nav-item">
+					<a id="navMall" href="/mall/list">可供标本</a>
+				</li>
+				<li class="nav-item">
+					<a id="navAuction" href="/auction/list">贝壳拍卖</a>
+				</li>
+				<li class="nav-item">
+					<a id="navShop" href="/shop/list">顺手买</a>
+				</li>
+				<li class="nav-item">
+					<a id="navArticle" href="/article/list/0/1">贝壳文章</a>
+				</li>
+				<li class="nav-item">
+					<a id="navQuestion" href="/question/list/0/1">问答</a>
+				</li>
+				<li class="nav-item">
+					<a id="navNews" href="/news/list/1">最新动态</a>
+				</li>
+				<li class="nav-item">
+					<a id="jiluList" href="/jilu/list">尺寸记录</a>
+				</li>
+				<li class="nav-item">
+					<a id="navContact" href="/contact">联系方式</a>
+				</li>
+			</ul>
+		</nav>
+<div id="app" class="container page goods" v-cloak>
+    <div class="row">
+        <nav class="side-nav">
+            <div class="qr" style="border: 1px solid #efefef; margin-bottom: 20px;
+            padding: 20px 0;">
+                <div id="qr" style="margin-left: 50px"></div>
+                <div style="margin-top: 20px; font-weight: 600; color: #C93F22; text-align: center;">请使用微信扫码购买</div>
+            </div>
+            <div class="nav-title">新品上架</div>
+            <div class="cate1-list">
+                <div class="cate1-item" :class="{active: active_tag == tag.id}" v-for="tag in tags" @click="changeTag(tag.id)">
+                    <span>{{tag.name}}</span>
+                </div>
+            </div>
+            <div class="nav-title">按分类</div>
+            <div class="cate1-list">
+                <div class="cate1-item" :class="{active: activeCate.cate1 == cate1.id}" v-for="cate1 in cate1List" v-on:click="getCate2(cate1.id)">
+                    <span>{{cate1.name}}</span>
+                    <i class="zmdi zmdi-caret-right"></i>
+                </div>
+            </div>
+            
+        </nav>
+        <div class="goods-wrap" id="listTop">
+            <div class="cate2-list" v-if="cate2List.length > 0">
+                <span class="cate2-item" :class="{active: activeCate.cate2 == 0}" @click="setCate2(0)">全部</span>
+                <span v-for="cate2 in cate2List" class="cate2-item" :class="{active: activeCate.cate2 == cate2.id}" @click="setCate2(cate2.id)">{{cate2.name}}</span>
+            </div>
+            <div class="search">
+                <input type="text" v-model="search.sn" placeholder="标本编号" @change="type2()">
+                <input type="text" v-model="search.cate2" placeholder="中文科名" @change="type2()">
+                <input type="text" v-model="search.name" placeholder="中文名" @change="type2()">
+                <input type="text" v-model="search.lat_name" placeholder="拉丁文名" @change="type2()">
+                <input type="text" v-model="search.area" placeholder="产地（只能搜英文）" @change="type2()">
+                <button type="button" @click="doSearch()">查找</button>
+            </div>
+
+            <div class="this-week-desc" v-if="active_tag == 1">
+                <div class="title">{{desc.title}}</div>
+                <div class="time">更新时间：{{desc.time}}</div>
+                <div class="desc" v-html="desc.desc"></div>
+            </div>
+            <ul class="goods-list">
+                <li class="goods-item" v-for="goods in list">
+                    <div class="goods-container">
+                        <a class="goods-link" :href="'/mall/goods/' + goods.id" target="_blank">
+                            <div class="goods-thumb" :style="{backgroundImage: 'url(' + goods.thumb + ')'}"></div>
+                            <div class="goods-name">{{goods.name}} {{goods.sn}}</div>
+                        </a>
+                        <div class="goods-option">
+                            <span class="goods-price">￥{{goods.price}}</span>
+                            <div v-if="goods.status == 1" class="option-icon">
+                                <i v-if="goods.favorite" class="zmdi zmdi-favorite zmdi-hc-lg" @click="fav(goods.id, -1)"></i>
+                                <i v-else class="zmdi zmdi-favorite-outline zmdi-hc-lg" @click="fav(goods.id, 1)"></i>
+                                <i v-if="goods.cart" class="zmdi zmdi-shopping-cart zmdi-hc-lg"></i>
+                                <i v-else class="zmdi zmdi-shopping-cart-plus zmdi-hc-lg" @click="addCart(goods.id)"></i>
+                            </div>
+                            <div v-else class="option-icon" style="color: #999">已售出</div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+            <div class="pages" v-if="pages.all_page > 0">
+                <span class="next" v-if="pages.now_page > 1" @click="nextPage(Number(pages.now_page) - 1)">
+                    <i class="zmdi zmdi-chevron-left zmdi-hc-lg"></i> 上一页
+                </span>
+                <span class="next disabled" v-else>
+                    <i class="zmdi zmdi-chevron-left zmdi-hc-lg"></i> 上一页
+                </span>
+                <span>共{{pages.amount}}条</span>
+                <span>第{{pages.now_page}}页 / 共{{pages.all_page}}页</span>
+                <span class="next" v-if="pages.now_page < pages.all_page" @click="nextPage(Number(pages.now_page) + 1)">
+                    下一页 <i class="zmdi zmdi-chevron-right zmdi-hc-lg"></i>
+                </span>
+                <span class="next disabled" v-else>
+                    下一页 <i class="zmdi zmdi-chevron-right zmdi-hc-lg"></i>
+                </span>
+                <span style="margin-left: 50px;">
+                    <input type="number" v-model="jump" style="width: 50px; height: 24px; margin-right: 10px; text-align: center;">
+                </span>
+                <span class="next" @click="nextPage(jump)">跳转</span>
+            </div>
+        </div>
+    </div>
+    <div class="fav-cart">
+        <a href="/mall/favList">
+            <i class="zmdi zmdi-favorite zmdi-hc-2x"></i> {{favorite}}
+            <div>收藏夹</div>
+        </a>
+        <a href="/mall/cartList">
+            <i class="zmdi zmdi-shopping-cart zmdi-hc-2x"></i> {{cart}}
+            <div>购物车</div>
+        </a>
+    </div>
+</div>
+		<footer class="footer">
+			<div class="container">
+				<ul>
+					
+					<li><a href="/article/view/22" target="_blank">标本名称</a></li>
+					
+					<li><a href="/article/view/23" target="_blank">贝壳品相</a></li>
+					
+					<li><a href="/article/view/24" target="_blank">尺寸问题</a></li>
+					
+					<li><a href="/article/view/25" target="_blank">照片问题</a></li>
+					
+					<li><a href="/article/view/26" target="_blank">标签问题</a></li>
+					
+					<li><a href="/article/view/696" target="_blank">付款方式</a></li>
+					
+					<li><a href="/article/view/699" target="_blank">购物流程</a></li>
+					
+					<li><a href="/article/view/700" target="_blank">运输问题</a></li>
+					
+					<li><a href="/article/view/1616" target="_blank">拍卖规则</a></li>
+					
+					<li><a href="/article/view/1868" target="_blank">冈瓦纳贝壳微信公众号使用Tip1: 订单查询</a></li>
+					
+					<li><a href="/article/view/1876" target="_blank">冈瓦纳贝壳微信公众号使用Tip2: 海量信息</a></li>
+					
+					<li><a href="/article/view/1919" target="_blank">CCC 尺寸记录说明</a></li>
+					
+				</ul>
+				<div class="copyright">
+					<div>&copy;上海冈瓦纳自然网 版权所有  地址：上海市松江新城区三新北路1755弄(复地香堤苑）117号</div>
+					<div><a class="link" style="text-decoration: underline;" href="http://beian.miit.gov.cn/">沪ICP备05002226号</a> 沪公网安备 31011702000845号</div>
+					<div><a class="link" style="text-decoration: underline;" href="http://beian.miit.gov.cn/">工业和信息化部</a></div>
+
+				</div>
+			</div>
+		</footer>
+		<!-- <script src="/js/main.js"></script> -->
+		<script>
+			var actNav = '#navMall';
+			$(actNav).addClass('active');
+		</script>
+	</body>
+</html>
+
+<script src="/js/qrcode.js"></script>
+<script>
+    var data = JSON.parse('{"tags":[{"id":1,"name":"本周新品"},{"id":2,"name":"上周新品"}],"tag":1,"pages":{"amount":248,"now_page":1,"all_page":7},"activeCate":{"cate1":0,"cate2":0},"cate1List":[{"id":1,"class":1,"father":0,"name":"淡水贝类","lat_name":"Freshwater Shells","status":1},{"id":2,"class":1,"father":0,"name":"多板纲","lat_name":"Polyplacophora","status":1},{"id":3,"class":1,"father":0,"name":"海生腹足纲","lat_name":"Marine Gastropoda","status":1},{"id":4,"class":1,"father":0,"name":"海生双壳纲","lat_name":"Marine Bivalvia","status":1},{"id":5,"class":1,"father":0,"name":"掘足纲","lat_name":"Scaphopoda","status":1},{"id":6,"class":1,"father":0,"name":"陆贝","lat_name":"Terrestrial Gastropoda","status":1},{"id":7,"class":1,"father":0,"name":"头足纲","lat_name":"Cephalopoda","status":1},{"id":8,"class":1,"father":0,"name":"其他","lat_name":"Miscellaneous","status":1}],"cate2List":[],"allCate2":[],"search":{"sn":"","name":"","cate2":"","lat_name":"","area":""},"type":1,"desc":{"id":1,"title":"2025第18周","title2":"2025 WK18","desc":"好看又不贵的贝壳补仓继续，每种都有好多枚可选.<br/><br/><br/><br/>我们去参加广州国际贝展了， 所有网上的订单将在一周后发出， 感谢等待。","desc2":"Popular shells continue...","time":"2025-04-29","time2":"29-04-2025","num":null,"num2":null,"content":null,"content2":null,"createdAt":null}}');
+    // console.log(data);
+    
+    var app = new Vue({
+        el: '#app',
+        data: {
+            desc: data.desc,
+            list: [],
+            pages: data.pages,
+            tags: data.tags,
+            favorite: data.favorite,
+            cart: data.cart,
+            active_tag: data.tag,
+            cate1List: data.cate1List,
+            cate2List: [],
+            activeCate: data.activeCate,
+            search: data.search,
+            jump: null,
+            type: data.type //1按列表  2搜索
+        },
+        created: function (){
+            if(this.activeCate.cate1){
+                this.getCate2(this.activeCate.cate1)
+            }
+            else{
+                if(this.type === 2){
+                    this.doSearch();
+                }
+                else{
+                    this.getGoodsList();
+                }
+            }
+        },
+        methods: {
+            // 为了翻页的时候使用搜索的结果
+            type2: function (){
+                this.activeCate = {
+                    cate1: 0,
+                    cate2: 0
+                };
+                this.active_tag = null;
+                this.type = 2;
+                this.pages.now_page = 1;
+            },
+            nextPage: function (page) {
+                this.pages.now_page = page;
+                if(this.type === 2){
+                    this.doSearch();
+                }
+                else{
+                    this.getGoodsList();
+                }
+                window.location.href = "#listTop"
+            },
+            getCate2: function (cate1){
+                this.type = 1;
+                this.active_tag = 3;
+                this.pages.now_page = 1;
+                this.activeCate.cate1 = cate1;
+                this.activeCate.cate2 = 0;
+                this.cate2List = new Array();
+                var that = this;
+                $.post('/mall/getCate2List', {
+                    father: cate1
+                }, function (r){
+                    that.cate2List = r;
+                })
+                
+                this.getGoodsList();
+            },
+            changeTag: function (tag){
+                this.type = 1;
+                this.pages.now_page = 1;
+                this.active_tag = tag;
+                this.activeCate = {
+                    cate1: 0,
+                    cate2: 0
+                };
+                if(tag < 3){
+                    this.cate2List = []
+                }
+                this.getGoodsList();
+            },
+            fav: function (goods_id, type){
+                var that = this;
+                $.post('/mall/favorite', {
+                    goods_id: goods_id,
+                    type: type
+                }, function (r){
+                    common.alert(r)
+                    if(r[0]){
+                        if(type === 1){
+                            that.favorite ++;
+                        }
+                        if(type === -1){
+                            that.favorite --;
+                        }
+                        // common.toast(true, '已收藏');
+                        for(var item of that.list){
+                            if(item.id === Number(goods_id)){
+                                if(item.favorite){
+                                    item.favorite = false
+                                }
+                                else{
+                                    item.favorite = true
+                                }
+                            }
+                        }
+                    }
+                })
+            },
+
+            // 加入购物车
+            addCart: function (goods_id){
+                var that = this;
+                $.post('/mall/addCart', {
+                    goods_id: goods_id
+                }, function (r){
+                    common.alert(r);
+                    if(r[0]){
+                        that.cart ++;
+                        for(var item of that.list){
+                            if(item.id === Number(goods_id)){
+                                if(item.cart){
+                                    item.cart = false
+                                }
+                                else{
+                                    item.cart = true
+                                }
+                            }
+                        }
+                    }
+                })
+            },
+
+            setCate1: function (cate1) {
+                this.type = 1;
+                this.pages.now_page = 1;
+                this.activeCate = {
+                    cate1: cate1,
+                    cate2: 0
+                }
+                app.getGoodsList()
+            },
+
+            setCate2: function (cate2) {
+                this.type = 1;
+                this.pages.now_page = 1;
+                this.activeCate.cate2 = cate2;
+                app.getGoodsList()
+            },
+
+            getGoodsList: function (){
+                var that = this;
+                $.post('/mall/getGoodsList', {
+                    page: that.pages.now_page,
+                    tag: that.active_tag,
+                    cate1: that.activeCate.cate1,
+                    cate2: that.activeCate.cate2
+                }, function (r){
+                    that.list = r.list;
+                    that.pages = r.pages;
+                })
+            },
+
+            doSearch: function (){
+                this.type = 2;
+                this.list = [];
+                var that = this;
+                $.post('/mall/searchGoods', {
+                    page: that.pages.now_page,
+                    search: that.search
+                }, function (r){
+                    that.list = r.list;
+                    that.pages = r.pages;
+                    if(r.list.length == 0){
+                        common.alert([false, '没有符合搜索条件的结果，请换查询条件再查'])
+                    }
+                })
+            }
+        }
+    });
+
+    var qrcode = new QRCode("qr", {
+        text: "https://wechat.ganvana.com/mall/list",
+        width: 120,
+        height: 120,
+        colorDark : "#000000",
+        colorLight : "#ffffff",
+        correctLevel : QRCode.CorrectLevel.H
+    });
+</script>

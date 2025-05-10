@@ -1,0 +1,33 @@
+{
+    "id": 10410,
+    "tag": 1,
+    "group": 15,
+    "cate1": 114,
+    "cate2": 3,
+    "status": -1,
+    "name": "黄杨木芭蕉螺",
+    "lat_name": "Pteropurpura esycha (Dall, 1925)",
+    "sn": "177556",
+    "author": null,
+    "price": 59,
+    "usd_price": 8,
+    "amount": 1,
+    "size": "28",
+    "condition": "F+/F++",
+    "area": "East China Sea Zhejiang Province China",
+    "thumb": "/imgs/img.ganvana.com/img/Picthree/177556.jpg",
+    "thumb_big": "/imgs/img.ganvana.com/img/Picthree/177556.jpg",
+    "desc": "",
+    "descEn": "",
+    "content": "",
+    "created_at": 1548303363317,
+    "updated_at": null,
+    "indexShow": 0,
+    "cate_name": "海生腹足纲（Marine Gastropoda）",
+    "cate_lat_name": "Marine Gastropoda",
+    "classification": null,
+    "img_list": [
+        "http://img.ganvana.com/img/Picthree/177556s.jpg",
+        "http://img.ganvana.com/img/Picthree/177556.jpg"
+    ]
+}

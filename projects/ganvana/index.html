@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>冈瓦纳自然网 - 标本</title>
+    <meta charset="utf-8" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="renderer" content="webkit" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="冈瓦纳自然网" />
+    <link rel="icon" href="/projects/ganvana/imgs/favicon.ico" type="image/gif">
+    <link href="/projects/ganvana/show/css/googleFont/font.css" rel="stylesheet">
+    <link href="/projects/ganvana/show/css/zmdi/material-design-iconic-font.min.css" rel="stylesheet" />
+    <link href="/projects/ganvana/show/css/animate.css" rel="stylesheet">
+    <link rel='stylesheet' href='/projects/ganvana/show/css/style.css' />
+    <script src="/projects/ganvana/show/js/jquery.min.js"></script>
+    <script src="/projects/ganvana/show/js/qs.js"></script>
+    <script src="/projects/ganvana/show/js/vue.js"></script>
+    <script src="/projects/ganvana/show/js/common.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/pako@2.1.0/dist/pako.min.js"></script>
+    <meta name="robots" content="noindex, nofollow">
+</head>
+
+<body>
+    <div id="password-mask"
+        style="position:fixed;z-index:99999;inset:0;background:#fff;display:flex;align-items:center;justify-content:center;">
+        <div style="text-align:center;">
+            <h2>请输入访问密码</h2>
+            <input id="pwd-input" type="password" style="padding:8px;font-size:16px;" placeholder="密码">
+            <button onclick="checkPwd()" style="padding:8px 16px;font-size:16px;margin-left:10px;">确定</button>
+            <div id="pwd-tip" style="color:red;margin-top:10px;"></div>
+        </div>
+    </div>
+    <script>
+        function checkPwd() {
+            var pwd = document.getElementById('pwd-input').value;
+            // 这里设置你的密码，比如123456
+            if (pwd === '123456') {
+                document.getElementById('password-mask').style.display = 'none';
+            } else {
+                document.getElementById('pwd-tip').innerText = '密码错误，请重试';
+            }
+        }
+        // 禁止回车自动提交刷新
+        document.getElementById('pwd-input').addEventListener('keydown', function (e) {
+            if (e.key === 'Enter') { checkPwd(); }
+        });
+        // 禁止页面内容被看到
+        window.addEventListener('DOMContentLoaded', function () {
+            var app = document.getElementById('app');
+            if (app) app.style.display = 'none';
+        });
+        // 密码通过后显示内容
+        function showApp() {
+            document.getElementById('app').style.display = '';
+        }
+        // 修改 checkPwd 逻辑
+        (function () {
+            var oldCheck = checkPwd;
+            checkPwd = function () {
+                var pwd = document.getElementById('pwd-input').value;
+                if (pwd === '123456') {
+                    document.getElementById('password-mask').style.display = 'none';
+                    showApp();
+                } else {
+                    document.getElementById('pwd-tip').innerText = '密码错误，请重试';
+                }
+            }
+        })();
+    </script>
+    <script>
+        // 页面加载时隐藏主内容
+        window.addEventListener('DOMContentLoaded', function () {
+            document.getElementById('app').style.display = 'none';
+        });
+    </script>
+    <!-- ...原有内容... -->
+
+    <div id="app" class="container page goods" v-cloak>
+        <nav class="nav-bar" style="margin-bottom: 10px; margin-top: -16px;">
+            <ul class="container nav-list">
+                <li class="nav-item">
+
+                    <a id="navIndex" href="https://www.ganvana.com/">首页</a>
+                </li>
+                <li class="nav-item">
+                    <a id="navMall" href="" :class="{active: dataType === 'mall'}"
+                        @click.prevent="switchType('mall')">可供标本</a>
+                </li>
+                <li class="nav-item">
+                    <a id="navAuction" href="" :class="{active: dataType === 'auction'}"
+                        @click.prevent="switchType('auction')">贝壳拍卖</a>
+                </li>
+            </ul>
+        </nav>
+        <div class="row">
+            <nav class="side-nav" :class="{'collapsed': sideNavCollapsed}">
+                <div
+                    style="position:relative;display:flex;align-items:center;justify-content:flex-start;margin-bottom:20px;">
+                    <a href="https://www.ganvana.com/" style="display:inline-block;">
+                        <img src="/projects/ganvana/imgs/logo.png" alt="" style="max-width: 100%; height: auto;">
+                    </a>
+                    <button @click="sideNavCollapsed = !sideNavCollapsed" class="side-nav-toggle"
+                        style="position:relative;width:36px;height:36px;
+                        background:#fff;border:1px solid #eee;border-radius:50%;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+                        <i v-if="!sideNavCollapsed" class="zmdi zmdi-chevron-left" style="font-size:22px;"></i>
+                        <i v-else class="zmdi zmdi-chevron-right" style="font-size:22px;"></i>
+                    </button>
+                </div>
+                <div class="nav-title">新品上架</div>
+                <div class="cate1-list">
+                    <div class="cate1-item" :class="{active: active_tag == tag.id}" v-for="tag in tags"
+                        @click="changeTag(tag.id)">
+                        <span>{{tag.name}}</span>
+                    </div>
+                </div>
+                <div class="nav-title">按分类</div>
+                <div class="cate1-list">
+                    <div class="cate1-item" :class="{active: activeCate.cate1 == cate1.id}" v-for="cate1 in cate1List"
+                        v-on:click="getCate2(cate1.id)">
+                        <span>{{cate1.name}}</span>
+                        <i class="zmdi zmdi-caret-right"></i>
+                    </div>
+                </div>
+                <div class="qr"
+                    style="border: 1px solid #efefef; margin-bottom: 20px; padding: 20px 0; text-align: center;">
+                    <div id="qr" style="display: inline-block;"></div>
+                    <div style="margin-top: 20px; font-weight: 600; color: #C93F22; text-align: center;">
+                        请使用微信扫码购买
+                    </div>
+                </div>
+            </nav>
+            <div class="goods-wrap" id="listTop">
+                <div class="cate2-list" v-if="cate2List.length > 0">
+                    <span class="cate2-item" :class="{active: activeCate.cate2 == 0}" @click="setCate2(0)">全部</span>
+                    <span v-for="cate2 in cate2List" class="cate2-item" :class="{active: activeCate.cate2 == cate2.id}"
+                        @click="setCate2(cate2.id)">{{cate2.name}}</span>
+                </div>
+                <div class="search"
+                    style="display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-start;">
+                    <!-- ...输入框和下拉框... -->
+                    <input type="number" v-model="search.sn" placeholder="标本编号" @change="type2()" style="width:120px;">
+                    <input type="text" v-model="search.cate2_name" placeholder="中文科名" @change="type2()"
+                        style="width:120px;">
+                    <input type="text" v-model="search.name" placeholder="中文名" @change="type2()" style="width:120px;">
+                    <input type="text" v-model="search.lat_name" placeholder="拉丁文名" @change="type2()"
+                        style="width:120px;">
+                    <input type="text" v-model="search.area" placeholder="产地（英文）" @change="type2()"
+                        style="width:120px;">
+                    <input type="number" v-model="search.low_price" placeholder="最低价" @change="type2()"
+                        style="width:120px;">
+                    <input type="number" v-model="search.high_price" placeholder="最高价" @change="type2()"
+                        style="width:120px;">
+                    <input type="number" v-model="search.page_size" placeholder="每页显示数量" @change="type2()"
+                        style="width:120px;">
+                    <input type="number" v-model="search.auction_id" :placeholder="'最新批次: ' + maxAuctionId"
+                        @change="type2()" style="width:120px;">
+                    </button>
+                    <select v-model="search.sort_field" style="margin-left: 20px;">
+                        <option value="">排序字段</option>
+                        <option value="id">ID</option>
+                        <option value="price">价格</option>
+                        <option value="usd_price">成本</option>
+                        <option value="name">名称</option>
+                        <option value="sn">标本编号</option>
+                        <option value="size">尺寸</option>
+                        <option value="condition">品相</option>
+                        <option value="cate_name">科名</option>
+                    </select>
+                    <select v-model="search.sort_order" style="margin-left: 20px;">
+                        <option value="">排序方式</option>
+                        <option value="asc">升序</option>
+                        <option value="desc">降序</option>
+                    </select>
+                    <select v-model="search.status" style="margin-left: 20px;">
+                        <option value="">商品状态</option>
+                        <option value="1">可购买</option>
+                        <option value="2">已售出</option>
+                        <option value="0">未上架</option>
+                        <option value="-1">已下架</option>
+                    </select>
+                    <label style="margin-left:20px;">
+                        <input type="checkbox" v-model="showPrice"> 价格
+                    </label>
+                    <label style="margin-left: 10px;">
+                        <input type="checkbox" v-model="showTime"> 时间
+                    </label>
+                    <label style="margin-left: 10px; margin-right: 10px;">
+                        <input type="checkbox" v-model="showArt"> 非贝壳
+                    </label>
+                    <button type="button" @click="searchAndResetPage()"
+                        style="background:#c93f22;color:#fff; margin-left: 10px;">应用</button>
+                    <button type="button" @click="resetSearch"
+                        style="background:#888;color:#fff; margin-left: 10px;">重置</button>
+                    <button type="button" @click="refreshRandom" class="refresh-btn" title="刷新随机排序"
+                        style="margin-left: 10px;">
+                        <i class="zmdi zmdi-refresh"></i>
+                    </button>
+                </div>
+                <ul class="goods-list">
+                    <li class="goods-item" v-for="goods in list">
+                        <div class="goods-container">
+                            <a class="goods-link"
+                                :href="dataType === 'auction' ? 'javascript:void(0)' : 'https://www.ganvana.com/mall/goods/' + goods.id"
+                                target="_blank" @click.prevent="showGoodsDetail(goods)">
+                                <div class="goods-thumb" :style="{backgroundImage: 'url(' + goods.thumb + ')'}"></div>
+                                <div class="goods-name">{{goods.name}} {{goods.sn}}</div>
+                                <div class="goods-name" v-if="showTime">{{goods.created_at | formatTime}}</div>
+                            </a>
+                            <template v-if="showPrice">
+                                <div class="goods-option" style="position: relative; padding-right: 36px;">
+                                    <span class="goods-price">￥{{goods.price}}</span>
+                                    <span class="goods-price">R.{{goods.average_mall_price}}({{goods.usd_price}})</span>
+
+                                    <i v-if="goods.favorite" class="zmdi zmdi-favorite zmdi-hc-lg"
+                                        @click="fav(goods.id, -1)"
+                                        style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%);"></i>
+                                    <i v-else class="zmdi zmdi-favorite-outline zmdi-hc-lg" @click="fav(goods.id, 1)"
+                                        style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%);"></i>
+
+                                    <div v-if="goods.status == 1" class="option-icon">
+                                        <i v-if="goods.cart" class="zmdi zmdi-shopping-cart zmdi-hc-xs"></i>
+                                        <i v-else class="zmdi zmdi-shopping-cart-plus zmdi-hc-xs"
+                                            @click="addCart(goods.id)"></i>
+                                    </div>
+                                    <div v-else-if="goods.status == 2" class="option-icon" style="color: #999999">已售出
+                                    </div>
+                                    <div v-else-if="goods.status == 0" class="option-icon" style="color: #990000">未上架
+                                    </div>
+                                    <div v-else-if="goods.status == -1" class="option-icon" style="color: #999999">已下架
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </li>
+                    <!-- 拍卖详情弹窗 -->
+                    <div v-if="showDetail && dataType === 'auction'" class="goods-detail-modal">
+                        <div class="goods-detail-content">
+                            <span class="close-btn" @click="showDetail = false"
+                                style="float:right;cursor:pointer;font-size:24px;">×</span>
+                            <!-- 商品详情 -->
+                            <div class="goods-container">
+                                <div class="row">
+                                    <div class="col-50 goods-thumb">
+                                        <div class="thumb-border">
+                                            <a :href="detailGoods.thumb_big" target="_blank">
+                                                <img :src="detailGoods.thumb_big" alt="">
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="col-50 goods-info">
+                                        <div class="goods-name">{{detailGoods.goods_name}}</div>
+                                        <div class="goods-desc">{{detailGoods.lat_name}}</div>
+                                        <div class="goods-desc"><b>拍品编号：</b>{{detailGoods.id}}</div>
+                                        <div class="goods-desc"><b>拍卖批次：</b>{{detailGoods.auction_id}}</div>
+                                        <div class="goods-desc"><b>标本编号：</b>{{detailGoods.goods_sn}}</div>
+                                        <div class="goods-desc"><b>当前赢价：</b><span
+                                                class="red">￥{{detailGoods.winner_price}}</span>
+                                        </div>
+                                        <div class="goods-desc"><b>参考价格：</b>￥{{detailGoods.average_mall_price}}
+                                            ({{detailGoods.min_mall_price}} ~ {{detailGoods.max_mall_price}})</div>
+                                        <div class="goods-desc"><b>参考成本：</b>￥{{detailGoods.average_mall_usd_price}}
+                                            ({{detailGoods.min_mall_usd_price}} ~ {{detailGoods.max_mall_usd_price}})
+                                        </div>
+                                        <div class="goods-desc"><b>参考数量：</b>{{detailGoods.mall_num}}</div>
+                                        <div id="qr-detail">
+                                            <a :href="'https://ganvana.com/auction/item/' + detailGoods.id"
+                                                target="_blank" style="display:inline-block;">
+                                                <div id="qr-detail-inner"></div>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div v-if="detailGoods.desc || detailGoods.content" class="goods-content">
+                                    <div v-if="detailGoods.desc" class="goods-desc" v-html="detailGoods.desc"></div>
+                                    <div v-if="detailGoods.content" class="page-container" v-html="detailGoods.content">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </ul>
+                <div class="pages" v-if="pages.all_page > 0" style="margin-top: 20px; text-align: center;">
+                    <!-- // 回到首页 -->
+                    <span class="next" @click="nextPage(1)" style="margin-right: 60px;">
+                        <i class="zmdi zmdi-home zmdi-hc-lg"></i> 回到首页
+                    </span>
+                    <span class="next" v-if="pages.now_page > 1" @click="nextPage(Number(pages.now_page) - 1)">
+                        <i class="zmdi zmdi-chevron-left zmdi-hc-lg"></i> 上一页
+                    </span>
+                    <span class="next disabled" v-else>
+                        <i class="zmdi zmdi-chevron-left zmdi-hc-lg"></i> 上一页
+                    </span>
+                    <span>第{{pages.now_page}}页 / 共{{pages.all_page}}页 (共{{pages.amount}}条)</span>
+                    <span class="next" v-if="pages.now_page < pages.all_page"
+                        @click="nextPage(Number(pages.now_page) + 1)">
+                        下一页 <i class="zmdi zmdi-chevron-right zmdi-hc-lg"></i>
+                    </span>
+                    <span class="next disabled" v-else>
+                        下一页 <i class="zmdi zmdi-chevron-right zmdi-hc-lg"></i>
+                    </span>
+                    <span style="margin-left: 60px;">
+                        <input type="number" v-model="jump"
+                            style="width: 50px; height: 24px; margin-right: 0px; text-align: center;">
+                    </span>
+                    <span class="next" @click="nextPage(jump)">跳转</span>
+                </div>
+            </div>
+        </div>
+        <div class="fav-cart">
+            <a href="https://www.ganvana.com/mall/favList">
+                <i class="zmdi zmdi-favorite zmdi-hc-2x"></i> {{favorite}}
+                <div>收藏夹</div>
+            </a>
+            <a href="https://www.ganvana.com/mall/cartList">
+                <i class="zmdi zmdi-shopping-cart zmdi-hc-2x"></i> {{cart}}
+                <div>购物车</div>
+            </a>
+            <div v-show="showBackTop" @click="scrollToTop" style="position:fixed;right:30px;bottom:40px;z-index:999;cursor:pointer;
+           background:#c93f22;color:#fff;padding:10px 18px;border-radius:24px;
+           box-shadow:0 2px 8px rgba(0,0,0,0.15);font-size:16px;">
+                回到顶部
+            </div>
+        </div>
+    </div>
+
+    <!-- <script src="/projects/ganvana/show/js/main.js"></script> -->
+    <!-- <script>
+        var actNav = '#navMall';
+        $(actNav).addClass('active');
+    </script> -->
+
+</body>
+
+</html>
+
+<script src="/projects/ganvana/show/js/qrcode.js"></script>
+<script>
+    Vue.filter('formatTime', function (value) {
+        if (!value) return '';
+        var date = new Date(Number(value));
+        var y = date.getFullYear();
+        var m = ('0' + (date.getMonth() + 1)).slice(-2);
+        var d = ('0' + date.getDate()).slice(-2);
+        var h = ('0' + date.getHours()).slice(-2);
+        var min = ('0' + date.getMinutes()).slice(-2);
+        return y + '-' + m + '-' + d + ' ' + h + ':' + min;
+    });
+    var data = JSON.parse('{"cate1List":[{"id":0,"class":1,"father":0,"name":"全部分类","lat_name":"All","status":1},{"id":1,"class":1,"father":0,"name":"淡水贝类","lat_name":"Freshwater Shells","status":1},{"id":2,"class":1,"father":0,"name":"多板纲","lat_name":"Polyplacophora","status":1},{"id":3,"class":1,"father":0,"name":"海生腹足纲","lat_name":"Marine Gastropoda","status":1},{"id":4,"class":1,"father":0,"name":"海生双壳纲","lat_name":"Marine Bivalvia","status":1},{"id":5,"class":1,"father":0,"name":"掘足纲","lat_name":"Scaphopoda","status":1},{"id":6,"class":1,"father":0,"name":"陆贝","lat_name":"Terrestrial Gastropoda","status":1},{"id":7,"class":1,"father":0,"name":"头足纲","lat_name":"Cephalopoda","status":1},{"id":8,"class":1,"father":0,"name":"其他","lat_name":"Miscellaneous","status":1},{"id":-1,"class":1,"father":0,"name":"艺术","lat_name":"Art","status":1}]}');
+    // console.log(data);
+    var app = new Vue({
+        el: '#app',
+        data: {
+            desc: { id: 1, title: "", title2: "", desc: "好看又不贵的贝壳", desc2: "Popular shells continue...", time: "", time2: "", num: null, num2: null, content: null, content2: null, createdAt: null },
+            list: [],
+            pages: { amount: 1, now_page: 1, all_page: 1 },
+            tags: [{ id: null, name: "全部标本" }, { id: 1, name: "本周新品" }, { id: 2, name: "上周新品" }],
+            favorite: data.favorite,
+            cart: data.cart,
+            active_tag: null,
+            cate1List: data.cate1List,
+            cate2List: [],
+            allCate2: [],
+            activeCate: { cate1: 0, cate2: 0 },
+            search: {
+                sn: "",
+                cate2_name: "",
+                name: "",
+                lat_name: "",
+                area: "",
+                low_price: "", // 默认显示 最低价
+                high_price: "", // 默认显示 最高价
+                sort_field: "", // 默认显示 请选择排序字段
+                sort_order: "", // 默认显示 请选择排序方式
+                status: "",      // 默认显示 请选择商品状态
+            },
+            jump: null,
+            type: 1, // 1按列表  2搜索
+            showPrice: false,   // 是否显示价格
+            showTime: false,    // 是否显示时间
+            showBackTop: false, // 是否显示回到顶部按钮            
+            dataType: 'mall', // 'mall' 或 'auction'
+            allGoods: [], // 用于存储所有商品数据
+            allAuction: [], // 用于存储所有拍卖数据
+            sideNavCollapsed: false, // ← 增加这一行
+            showDetail: false,
+            detailGoods: {},
+            showArt: false,
+
+        },
+        computed: {
+            maxAuctionId() {
+                if (!this.allAuction.length) return '-';
+                return Math.max(...this.allAuction.map(item => Number(item.auction_id) || 0));
+            }
+        },
+        // load all data
+        mounted: function () {
+            var that = this;
+            // 加载所有 cate2
+            $.getJSON('/projects/ganvana/tags_cate1_cate2.json', function (data) {
+                that.allCate2 = data.cate2List;
+                that.allCate2.push({ "id": -1, "class": 1, "father": -1, "name": "艺术", "lat_name": "Art", "status": 1 });
+            });
+
+            // 加载压缩后的商品数据
+            loadGzJsonl('/projects/ganvana/mall/getGoodsInfo.jsonl.gz', function (allGoodsRaw) {
+                const snMap = {};
+                allGoodsRaw.forEach(item => {
+                    for (var cate2 of that.allCate2) {
+                        if (item.cate2_name == cate2.name) {
+                            item.cate2 = cate2.id;
+                            item.cate1 = cate2.father;
+                        }
+                    }
+                    if (item.thumb) item.thumb = cleanImgUrl(item.thumb);
+                    if (item.thumb_big) item.thumb_big = cleanImgUrl(item.thumb_big);
+                    if (!item.sn) return;
+                    if (!snMap[item.sn] || item.id > snMap[item.sn].id) {
+                        snMap[item.sn] = item;
+                    }
+                });
+                let goodsArr = Object.values(snMap);
+                goodsArr.sort(() => Math.random() - 0.5);
+                that.allGoods = goodsArr;
+                if (that.dataType === 'mall') that.getGoodsList();
+            });
+
+            // 加载压缩后的拍卖数据
+            loadGzJsonl('/projects/ganvana/auction/getItem.jsonl.gz', function (allAuctionRaw) {
+                const snMap = {};
+                allAuctionRaw.forEach(item => {
+                    item.sn = item.goods_sn;
+                    item.price = item.winner_price;
+                    item.name = item.goods_name;
+                    item.cate2_name = item.family;
+                    item.usd_price = item.average_mall_usd_price;
+                    for (var cate2 of that.allCate2) {
+                        if (item.cate2_name == cate2.name) {
+                            item.cate2 = cate2.id;
+                            item.cate1 = cate2.father;
+                        }
+                    }
+                    if (item.thumb) item.thumb = cleanImgUrl(item.thumb);
+                    if (item.thumb_big) item.thumb_big = cleanImgUrl(item.thumb_big);
+                    if (!item.sn) return;
+                    if (!snMap[item.id]) {
+                        snMap[item.id] = item;
+                    }
+                });
+                let auctionArr = Object.values(snMap);
+                auctionArr.sort(() => Math.random() - 0.5);
+                that.allAuction = auctionArr;
+                if (that.dataType === 'auction') that.getGoodsList();
+            });
+        },
+        created: function () {
+            if (this.activeCate.cate1) {
+                this.getCate2(this.activeCate.cate1)
+            }
+            else {
+                if (this.type === 2) {
+                    this.doSearch();
+                }
+                else {
+                    this.getGoodsList();
+                }
+            }
+            window.addEventListener('scroll', () => {
+                this.showBackTop = window.scrollY > 200;
+            });
+        },
+        methods: {
+            // 为了翻页的时候使用搜索的结果
+            type2: function () {
+                // this.activeCate = {
+                //     cate1: 0,
+                //     cate2: 0
+                // };
+                // this.active_tag = null;
+                this.type = 2;
+                this.pages.now_page = 1;
+            },
+            nextPage: function (page) {
+                this.pages.now_page = page;
+                if (this.type === 2) {
+                    this.doSearch();
+                }
+                else {
+                    this.getGoodsList();
+                }
+                window.location.href = "#listTop"
+            },
+            getCate2: function (cate1) {
+                this.type = 1;
+                // this.active_tag = null;
+                this.pages.now_page = 1;
+                this.activeCate.cate1 = cate1;
+                this.activeCate.cate2 = 0;
+                // 直接用已加载的 allCate2
+                let list;
+                if (!cate1 || cate1 == 0) {
+                    list = this.allCate2.slice();
+                } else {
+                    list = this.allCate2.filter(function (item) {
+                        return Number(item.father) === Number(cate1);
+                    });
+                }
+                // 按拼音排序
+                list.sort(function (a, b) {
+                    return a.name.localeCompare(b.name, 'zh-CN');
+                });
+                this.cate2List = list;
+                if (cate1 == 0) {
+                    this.cate2List = []
+                }
+                this.getGoodsList();
+            },
+            changeTag: function (tag) {
+                this.type = 1;
+                this.pages.now_page = 1;
+                this.active_tag = tag;
+                // this.activeCate = {
+                //     cate1: 0,
+                //     cate2: 0
+                // };
+                // if (tag < 3) {
+                //     this.cate2List = []
+                // }
+                this.getGoodsList();
+            },
+            fav: function (goods_id, type) {
+                var that = this;
+                $.post('https://www.ganvana.com/mall/favorite', {
+                    goods_id: goods_id,
+                    type: type
+                }, function (r) {
+                    common.alert(r)
+                    if (r[0]) {
+                        if (type === 1) {
+                            that.favorite++;
+                        }
+                        if (type === -1) {
+                            that.favorite--;
+                        }
+                        // common.toast(true, '已收藏');
+                        for (var item of that.list) {
+                            if (item.id === Number(goods_id)) {
+                                if (item.favorite) {
+                                    item.favorite = false
+                                }
+                                else {
+                                    item.favorite = true
+                                }
+                            }
+                        }
+                    }
+                })
+            },
+
+            // 加入购物车
+            addCart: function (goods_id) {
+                var that = this;
+                $.post('https://www.ganvana.com/mall/addCart', {
+                    goods_id: goods_id
+                }, function (r) {
+                    common.alert(r);
+                    if (r[0]) {
+                        that.cart++;
+                        for (var item of that.list) {
+                            if (item.id === Number(goods_id)) {
+                                if (item.cart) {
+                                    item.cart = false
+                                }
+                                else {
+                                    item.cart = true
+                                }
+                            }
+                        }
+                    }
+                })
+            },
+
+            setCate1: function (cate1) {
+                this.type = 1;
+                this.pages.now_page = 1;
+                this.activeCate = {
+                    cate1: cate1,
+                    cate2: 0
+                }
+                if (cate1 == 0) {
+                    this.cate2List = []
+                }
+                app.getGoodsList()
+            },
+
+            setCate2: function (cate2) {
+                this.type = 1;
+                this.pages.now_page = 1;
+                this.activeCate.cate2 = cate2;
+                app.getGoodsList()
+            },
+            getGoodsList: function () {
+                var that = this;
+                // 根据 dataType 选择数据源
+                const uniqueGoods = that.dataType === 'auction' ? that.allAuction : that.allGoods;
+                const filteredList = uniqueGoods.filter(function (item) {
+                    return Object.keys(item).length > 1 &&
+                        (!that.active_tag || item.tag === that.active_tag) &&
+                        (!that.activeCate.cate1 || item.cate1 === that.activeCate.cate1) &&
+                        (!that.activeCate.cate2 || item.cate2 === that.activeCate.cate2) &&
+                        (that.showArt || (item.family !== '艺术' && item.family !== '书籍' && item.cate2_name !== '艺术'));
+                });
+
+                // 分页
+                const pageSize = that.search.page_size || 12;
+                const totalPage = Math.ceil(filteredList.length / pageSize);
+                const nowPage = that.pages.now_page;
+                const paginatedList = filteredList.slice((nowPage - 1) * pageSize, nowPage * pageSize);
+                that.list = paginatedList;
+                that.pages = {
+                    now_page: nowPage,
+                    all_page: totalPage,
+                    amount: filteredList.length,
+                    page_size: pageSize
+                };
+            },
+            searchAndResetPage: function () {
+                this.pages.now_page = 1;
+                this.doSearch();
+            },
+            doSearch: function () {
+                this.type = 2;
+                this.list = [];
+                var that = this;
+                // 根据 dataType 选择数据源
+                const uniqueGoods = that.dataType === 'auction' ? that.allAuction : that.allGoods;
+                const filteredList = uniqueGoods.filter(function (item) {
+                    return Object.keys(item).length > 1 &&
+                        (!that.active_tag || item.tag === that.active_tag) &&
+                        (!that.activeCate.cate1 || item.cate1 === that.activeCate.cate1) &&
+                        (!that.activeCate.cate2 || item.cate2 === that.activeCate.cate2) &&
+                        (!that.search.sn || item.sn.includes(that.search.sn)) &&
+                        (!that.search.cate2_name || item.cate_name.includes(that.search.cate2_name)) &&
+                        (!that.search.name || item.name.includes(that.search.name)) &&
+                        (!that.search.lat_name || item.lat_name.includes(that.search.lat_name)) &&
+                        (!that.search.area || item.area.includes(that.search.area)) &&
+                        (!that.search.low_price || item.price >= that.search.low_price) &&
+                        (!that.search.high_price || item.price <= that.search.high_price) &&
+                        (!that.search.status || item.status == that.search.status) &&
+                        (!that.search.auction_id || item.auction_id == that.search.auction_id) &&
+                        (that.showArt || (item.family !== '艺术' && item.family !== '书籍' && item.cate2_name !== '艺术'));
+                });
+                const sortField = that.search.sort_field || '';
+                const sortOrder = that.search.sort_order || '';
+                if (sortField) {
+                    filteredList.sort(function (a, b) {
+                        let aVal = a[sortField], bVal = b[sortField];
+                        // 需要数值排序的字段
+                        if (['size', 'price', 'usd_price', 'sn', 'id'].includes(sortField)) {
+                            aVal = Number(aVal) || 0;
+                            bVal = Number(bVal) || 0;
+                        }
+                        if (aVal < bVal) return sortOrder === 'asc' ? -1 : 1;
+                        if (aVal > bVal) return sortOrder === 'asc' ? 1 : -1;
+                        return 0;
+                    });
+                }
+                // 分页
+                const pageSize = that.search.page_size || 12;
+                const nowPage = that.pages.now_page;
+                const totalPage = Math.ceil(filteredList.length / pageSize);
+                that.list = filteredList.slice((nowPage - 1) * pageSize, nowPage * pageSize);
+                that.pages = {
+                    now_page: nowPage,
+                    all_page: totalPage,
+                    amount: filteredList.length,
+                    page_size: pageSize
+                };
+            },
+            scrollToTop: function () {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            },
+            switchType: function (type) {
+                this.type = 2;
+                this.dataType = type;
+                this.pages.now_page = 1;
+                this.getGoodsList();
+            },
+            resetSearch: function () {
+                // 重置搜索条件
+                this.search = {
+                    sn: "",
+                    cate2_name: "",
+                    name: "",
+                    lat_name: "",
+                    area: "",
+                    low_price: "",
+                    high_price: "",
+                    sort_field: "",
+                    sort_order: "",
+                    status: "",
+                    auction_id: "",
+                    page_size: ""
+                };
+                // 重置分类和标签
+                this.activeCate = { cate1: 0, cate2: 0 };
+                this.cate2List = [];
+                this.active_tag = null;
+                this.pages.now_page = 1;
+                this.type = 1;
+                this.showPrice = false;
+                this.showTime = false;
+                this.getGoodsList();
+            },
+            refreshRandom: function () {
+                // 对当前数据源重新随机排序
+                if (this.dataType === 'auction') {
+                    this.allAuction.sort(() => Math.random() - 0.5);
+                } else {
+                    this.allGoods.sort(() => Math.random() - 0.5);
+                }
+                // 刷新当前列表
+                if (this.type === 2) {
+                    this.doSearch();
+                } else {
+                    this.getGoodsList();
+                }
+            },
+            showGoodsDetail(goods) {
+                if (this.dataType === 'auction') {
+                    this.detailGoods = goods;
+                    this.showDetail = true;
+                    this.$nextTick(() => {
+                        if (document.getElementById('qr-detail-inner')) {
+                            document.getElementById('qr-detail-inner').innerHTML = '';
+                            new QRCode("qr-detail-inner", {
+                                text: "https://wechat.ganvana.com/auction/item/" + goods.id,
+                                width: 100,
+                                height: 100,
+                                colorDark: "#000000",
+                                colorLight: "#ffffff",
+                                correctLevel: QRCode.CorrectLevel.H
+                            });
+                        }
+                    });
+                } else {
+                    // 非拍卖，正常跳转
+                    window.open('https://www.ganvana.com/mall/goods/' + goods.id, '_blank');
+                }
+            },
+        }
+    });
+    function cleanImgUrl(img) {
+        if (!img) return "";
+        img = img.replace("http://", "https://").trim();
+        if (
+            ["undefined", "null", "None", ""].includes(img) ||
+            Array.from({ length: 100 }, (_, i) => String(i)).includes(img)
+        ) {
+            return "";
+        }
+        if (img.length <= 5 || img.indexOf('.') === -1) {
+            // console.log("Invalid image URL found: " + img);
+            return "";
+        }
+        if (img.startsWith("/uploads/")) {
+            img = img.replace("/uploads/", "https://admin.ganvana.com/uploads/");
+        }
+        if (img.startsWith("https://www.ganvana.com/UploadFiles/p")) {
+            img = img.replace(
+                "https://www.ganvana.com/UploadFiles/p",
+                "https://img.ganvana.com/img/P"
+            );
+        }
+        if (img.startsWith("https://wechat.")) {
+            img = img.replace("https://wechat.", "https://admin.");
+        }
+        const numList = [
+            'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten',
+            'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen', 'twenty'
+        ];
+        for (let num of numList) {
+            if (img.includes("Pic" + num) && !img.includes("Pic" + num + "/")) {
+                img = img.replace("Pic" + num, "Pic" + num + "/");
+            }
+        }
+        return img;
+    };
+    function loadGzJsonl(url, callback) {
+        fetch(url)
+            .then(res => res.arrayBuffer())
+            .then(buffer => {
+                // 解压
+                const str = new TextDecoder().decode(pako.ungzip(new Uint8Array(buffer)));
+                // 按行分割
+                const lines = str.split('\n').filter(line => line.trim() !== '');
+                // 解析为对象数组
+                const arr = lines.map(line => JSON.parse(line));
+                callback(arr);
+            });
+    };
+
+    var qrcode = new QRCode("qr", {
+        text: "https://wechat.ganvana.com/mall/list",
+        width: 120,
+        height: 120,
+        colorDark: "#000000",
+        colorLight: "#ffffff",
+        correctLevel: QRCode.CorrectLevel.H
+    });
+</script>
+
+<style>
+    .goods-detail-modal {
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        background: rgba(0, 0, 0, 0.4);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .goods-detail-content {
+        background: #fff;
+        padding: 2rem 1.5rem;
+        border-radius: 8px;
+        width: 800px;
+        max-height: 90vh;
+        /* 新增：最大高度为视口高度的90% */
+        overflow-y: auto;
+        /* 新增：内容超出时滚动 */
+        position: relative;
+    }
+
+    .goods-detail-content .col-50.goods-thumb {
+        flex: 0 0 60%;
+        max-width: 60%;
+    }
+
+    .goods-detail-content .col-50.goods-info {
+        flex: 0 0 40%;
+        max-width: 40%;
+    }
+</style>
