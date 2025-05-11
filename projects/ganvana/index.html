@@ -104,7 +104,7 @@
                 <div
                     style="position:relative;display:flex;align-items:center;justify-content:flex-start;margin-bottom:20px;">
                     <!-- <a href="https://www.ganvana.com/" style="display:inline-block;"> -->
-                        <img src="/projects/ganvana/logo.png" alt="" style="max-width: 100%; height: auto;">
+                    <img src="/projects/ganvana/logo.png" alt="" style="max-width: 100%; height: auto;">
                     <!-- </a> -->
                     <button @click="sideNavCollapsed = !sideNavCollapsed" class="side-nav-toggle"
                         style="position:relative;width:36px;height:36px;
@@ -257,12 +257,15 @@
                                     <div class="col-50 goods-info">
                                         <div class="goods-name">{{detailGoods.goods_name}}</div>
                                         <div class="goods-desc">{{detailGoods.lat_name}}</div>
+                                        <div class="goods-desc"><b>科名：</b>{{detailGoods.family}}
+                                            ({{detailGoods.lat_family}})</div>
+                                        <div class="goods-desc"><b>产地：</b>{{detailGoods.product_area}}</div>
+                                        <div class="goods-desc"><b>尺寸：</b>{{detailGoods.size}}mm</div>
                                         <div class="goods-desc"><b>拍品编号：</b>{{detailGoods.id}}</div>
                                         <div class="goods-desc"><b>拍卖批次：</b>{{detailGoods.auction_id}}</div>
                                         <div class="goods-desc"><b>标本编号：</b>{{detailGoods.goods_sn}}</div>
                                         <div class="goods-desc"><b>当前赢价：</b><span
-                                                class="red">￥{{detailGoods.winner_price}}</span>
-                                        </div>
+                                                class="red">￥{{detailGoods.winner_price}}</span></div>
                                         <div class="goods-desc"><b>参考价格：</b>￥{{detailGoods.average_mall_price}}
                                             ({{detailGoods.min_mall_price}} ~ {{detailGoods.max_mall_price}})</div>
                                         <div class="goods-desc"><b>参考成本：</b>￥{{detailGoods.average_mall_usd_price}}
@@ -368,17 +371,32 @@
             cate2List: [],
             allCate2: [],
             activeCate: { cate1: 0, cate2: 0 },
-            search: {
+            searchMall: {
                 sn: "",
                 cate2_name: "",
                 name: "",
                 lat_name: "",
                 area: "",
-                low_price: "", // 默认显示 最低价
-                high_price: "", // 默认显示 最高价
-                sort_field: "", // 默认显示 请选择排序字段
-                sort_order: "", // 默认显示 请选择排序方式
-                status: "",      // 默认显示 请选择商品状态
+                low_price: "",
+                high_price: "",
+                sort_field: "",
+                sort_order: "",
+                status: "",
+                page_size: "",
+            },
+            searchAuction: {
+                sn: "",
+                cate2_name: "",
+                name: "",
+                lat_name: "",
+                area: "",
+                low_price: "",
+                high_price: "",
+                sort_field: "",
+                sort_order: "",
+                status: "",
+                auction_id: "",
+                page_size: "",
             },
             jump: null,
             type: 1, // 1按列表  2搜索
@@ -395,6 +413,18 @@
 
         },
         computed: {
+            search: {
+                get() {
+                    return this.dataType === 'auction' ? this.searchAuction : this.searchMall;
+                },
+                set(val) {
+                    if (this.dataType === 'auction') {
+                        this.searchAuction = val;
+                    } else {
+                        this.searchMall = val;
+                    }
+                }
+            },
             maxAuctionId() {
                 if (!this.allAuction.length) return '-';
                 return Math.max(...this.allAuction.map(item => Number(item.auction_id) || 0));
@@ -691,24 +721,40 @@
                 this.type = 2;
                 this.dataType = type;
                 this.pages.now_page = 1;
-                this.getGoodsList();
+                this.doSearch();
             },
             resetSearch: function () {
                 // 重置搜索条件
-                this.search = {
-                    sn: "",
-                    cate2_name: "",
-                    name: "",
-                    lat_name: "",
-                    area: "",
-                    low_price: "",
-                    high_price: "",
-                    sort_field: "",
-                    sort_order: "",
-                    status: "",
-                    auction_id: "",
-                    page_size: ""
-                };
+                if (this.dataType === 'auction') {
+                    this.searchAuction = {
+                        sn: "",
+                        cate2_name: "",
+                        name: "",
+                        lat_name: "",
+                        area: "",
+                        low_price: "",
+                        high_price: "",
+                        sort_field: "",
+                        sort_order: "",
+                        status: "",
+                        auction_id: "",
+                        page_size: ""
+                    };
+                } else {
+                    this.searchMall = {
+                        sn: "",
+                        cate2_name: "",
+                        name: "",
+                        lat_name: "",
+                        area: "",
+                        low_price: "",
+                        high_price: "",
+                        sort_field: "",
+                        sort_order: "",
+                        status: "",
+                        page_size: ""
+                    };
+                }
                 // 重置分类和标签
                 this.activeCate = { cate1: 0, cate2: 0 };
                 this.cate2List = [];
@@ -841,13 +887,13 @@
     }
 
     .goods-detail-content .col-50.goods-thumb {
-        flex: 0 0 60%;
-        max-width: 60%;
+        flex: 0 0 70%;
+        max-width: 70%;
     }
 
     .goods-detail-content .col-50.goods-info {
-        flex: 0 0 40%;
-        max-width: 40%;
+        flex: 0 0 30%;
+        max-width: 30%;
     }
 
     @media (max-width: 768px) {
