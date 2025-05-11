@@ -781,23 +781,8 @@
             },
             showGoodsDetail(goods) {
                 if (this.dataType === 'auction') {
-                    // 先显示旧数据，提升响应速度
                     this.detailGoods = goods;
                     this.showDetail = true;
-
-                    // 实时获取最新winner_price等信息
-                    fetch('https://www.ganvana.com/auction/getItem/' + goods.id)
-                        .then(res => res.json())
-                        .then(data => {
-                            if (data && data.goods) {
-                                // 只更新winner_price等实时字段
-                                this.detailGoods.winner_price = data.goods.winner_price;
-                                this.detailGoods.winner_nickname = data.goods.winner_nickname;
-                                this.detailGoods.winner_headimg = data.goods.winner_headimg;
-                                // 如有其它需要实时刷新的字段可继续补充
-                            }
-                        });
-
                     this.$nextTick(() => {
                         if (document.getElementById('qr-detail-inner')) {
                             document.getElementById('qr-detail-inner').innerHTML = '';
