@@ -28,8 +28,8 @@ def clean_img(img):
 
 
 url = "https://www.ganvana.com/auction/getItem/"
-auction_root = "D:/_WangKe/ganvana/auction/getItem"
-jsonl_file = "D:/_WangKe/ganvana/auction/getItem.jsonl"
+auction_root = "D:/_WangKe/scikkk.github.io/projects/ganvana/auction/getItem"
+jsonl_file = "D:/_WangKe/scikkk.github.io/projects/ganvana/auction/getItem.jsonl"
 
 # get last idx
 with open(jsonl_file, "r", encoding="utf-8") as f:
@@ -71,7 +71,7 @@ for example in tqdm(examples, desc="Processing"):
         if img.endswith("s.jpg"):
             continue
         img_url = clean_img(img)
-        img_path = "D:/_WangKe/ganvana/imgs/" + img_url.split('https://')[-1]
+        img_path = "D:/_WangKe/scikkk.github.io/projects/ganvana/imgs/" + img_url.split('https://')[-1]
         if not os.path.exists(img_path):
             print(f"Image not found: {img_path}")
             continue

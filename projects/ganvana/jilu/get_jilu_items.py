@@ -28,8 +28,8 @@ headers = {"Accept": "*/*",
 
 
 MAX_PAGE = 10
-dir = "D:/_WangKe/ganvana/jilu/getList"
-jsonl_file = "D:/_WangKe/ganvana/jilu/getList.jsonl"
+dir = "D:/_WangKe/scikkk.github.io/projects/ganvana/jilu/getList"
+jsonl_file = "D:/_WangKe/scikkk.github.io/projects/ganvana/jilu/getList.jsonl"
 
 # get last page
 with open(jsonl_file, "r", encoding="utf-8") as f:

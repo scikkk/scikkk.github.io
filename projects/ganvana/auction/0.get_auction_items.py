@@ -9,8 +9,8 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 MIN_IDX = 42037 # 41929
 MAX_IDX = 42137
 url = "https://www.ganvana.com/auction/getItem/"
-auction_root = "D:/_WangKe/ganvana/auction/getItem"
-jsonl_file = "D:/_WangKe/ganvana/auction/getItem.jsonl"
+auction_root = "D:/_WangKe/scikkk.github.io/projects/ganvana/auction/getItem"
+jsonl_file = "D:/_WangKe/scikkk.github.io/projects/ganvana/auction/getItem.jsonl"
 
 
 

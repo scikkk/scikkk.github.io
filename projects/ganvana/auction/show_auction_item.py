@@ -9,8 +9,8 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 
 url = "https://www.ganvana.com/auction/getItem/"
-dir = "D:/_WangKe/ganvana/auction/getItem"
-jsonl_file = "D:/_WangKe/ganvana/auction/getItem.jsonl"
+dir = "D:/_WangKe/scikkk.github.io/projects/ganvana/auction/getItem"
+jsonl_file = "D:/_WangKe/scikkk.github.io/projects/ganvana/auction/getItem.jsonl"
 
 # get last idx
 with open(jsonl_file, "r", encoding="utf-8") as f:
