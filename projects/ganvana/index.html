@@ -256,7 +256,7 @@
                                     </div>
                                     <div class="col-50 goods-info">
                                         <div class="goods-name">{{detailGoods.goods_name}}</div>
-                                        <div class="goods-desc">{{detailGoods.lat_name}}</div>
+                                        <div class="goods-desc"><b>学名：</b>{{detailGoods.lat_name}}</div>
                                         <div class="goods-desc"><b>科名：</b>{{detailGoods.family}}
                                             ({{detailGoods.lat_family}})</div>
                                         <div class="goods-desc"><b>产地：</b>{{detailGoods.product_area}}</div>
@@ -913,6 +913,28 @@
             .goods-item {
                 width: 100% !important;
             }
+        }
+    }
+
+    @media (max-width: 900px) {
+        .goods-detail-content {
+            width: 98vw;
+            padding: 1rem 0.5rem;
+        }
+
+        .goods-detail-content .row {
+            flex-direction: column !important;
+            display: flex;
+        }
+
+        .goods-detail-content .col-50.goods-thumb,
+        .goods-detail-content .col-50.goods-info {
+            max-width: 100%;
+            flex: 0 0 100%;
+        }
+
+        .goods-detail-content .col-50.goods-thumb {
+            margin-bottom: 1rem;
         }
     }
 </style>
