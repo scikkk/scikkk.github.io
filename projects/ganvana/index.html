@@ -206,9 +206,8 @@
                 <ul class="goods-list">
                     <li class="goods-item" v-for="goods in list">
                         <div class="goods-container">
-                            <a class="goods-link"
-                                :href="dataType === 'auction' ? 'javascript:void(0)' : 'https://www.ganvana.com/mall/goods/' + goods.id"
-                                target="_blank" @click.prevent="showGoodsDetail(goods)">
+                            <a class="goods-link" :href="'javascript:void(0)'" target="_blank"
+                                @click.prevent="showGoodsDetail(goods)">
                                 <div class="goods-thumb" :style="{backgroundImage: 'url(' + goods.thumb + ')'}"></div>
                                 <div class="goods-name">{{goods.name}} {{goods.sn}}</div>
                                 <div class="goods-name" v-if="showTime">{{goods.created_at | formatTime}}</div>
@@ -217,13 +216,11 @@
                                 <div class="goods-option" style="position: relative; padding-right: 36px;">
                                     <span class="goods-price">￥{{goods.price}}</span>
                                     <span class="goods-price">R.{{goods.average_mall_price}}({{goods.usd_price}})</span>
-
                                     <i v-if="goods.favorite" class="zmdi zmdi-favorite zmdi-hc-lg"
                                         @click="fav(goods.id, -1)"
                                         style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%);"></i>
                                     <i v-else class="zmdi zmdi-favorite-outline zmdi-hc-lg" @click="fav(goods.id, 1)"
                                         style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%);"></i>
-
                                     <div v-if="goods.status == 1" class="option-icon">
                                         <i v-if="goods.cart" class="zmdi zmdi-shopping-cart zmdi-hc-xs"></i>
                                         <i v-else class="zmdi zmdi-shopping-cart-plus zmdi-hc-xs"
@@ -239,8 +236,8 @@
                             </template>
                         </div>
                     </li>
-                    <!-- 拍卖详情弹窗 -->
-                    <div v-if="showDetail && dataType === 'auction'" class="goods-detail-modal">
+                    <!-- 详情弹窗：支持mall和auction -->
+                    <div v-if="showDetail" class="goods-detail-modal">
                         <div class="goods-detail-content">
                             <span class="close-btn" @click="showDetail = false"
                                 style="float:right;cursor:pointer;font-size:24px;">×</span>
@@ -255,25 +252,41 @@
                                         </div>
                                     </div>
                                     <div class="col-50 goods-info">
-                                        <div class="goods-name">{{detailGoods.goods_name}}</div>
+                                        <div class="goods-name">{{dataType === 'auction' ? detailGoods.goods_name
+                                            :detailGoods.name}}</div>
+                                        <div class="goods-desc" v-if="dataType === 'mall'">
+                                            <b>标本编号：</b>{{detailGoods.sn}}</div>
                                         <div class="goods-desc"><b>学名：</b>{{detailGoods.lat_name}}</div>
-                                        <div class="goods-desc"><b>科名：</b>{{detailGoods.family}}
-                                            ({{detailGoods.lat_family}})</div>
-                                        <div class="goods-desc"><b>产地：</b>{{detailGoods.product_area}}</div>
-                                        <div class="goods-desc"><b>尺寸：</b>{{detailGoods.size}}mm</div>
-                                        <div class="goods-desc"><b>拍品编号：</b>{{detailGoods.id}}</div>
-                                        <div class="goods-desc"><b>拍卖批次：</b>{{detailGoods.auction_id}}</div>
-                                        <div class="goods-desc"><b>标本编号：</b>{{detailGoods.goods_sn}}</div>
-                                        <div class="goods-desc"><b>当前赢价：</b><span
-                                                class="red">￥{{detailGoods.winner_price}}</span></div>
-                                        <div class="goods-desc"><b>参考价格：</b>￥{{detailGoods.average_mall_price}}
-                                            ({{detailGoods.min_mall_price}} ~ {{detailGoods.max_mall_price}})</div>
-                                        <div class="goods-desc"><b>参考成本：</b>￥{{detailGoods.average_mall_usd_price}}
-                                            ({{detailGoods.min_mall_usd_price}} ~ {{detailGoods.max_mall_usd_price}})
+                                        <div class="goods-desc"><b>科名：</b>{{detailGoods.family ||
+                                            detailGoods.cate_name}}<template
+                                                v-if="detailGoods.lat_family">({{detailGoods.lat_family}})</template>
                                         </div>
-                                        <div class="goods-desc"><b>参考数量：</b>{{detailGoods.mall_num}}</div>
+                                        <div class="goods-desc"><b>产地：</b>{{detailGoods.product_area ||
+                                            detailGoods.area}}</div>
+                                        <div class="goods-desc"><b>尺寸：</b>{{detailGoods.size}}mm</div>
+                                        <div class="goods-desc" v-if="dataType === 'mall'">
+                                            <b>品相：</b>{{detailGoods.condition}}</div>
+                                        <div class="goods-desc" v-if="dataType === 'auction'">
+                                            <b>拍品编号：</b>{{detailGoods.id}}</div>
+                                        <div class="goods-desc" v-if="dataType === 'auction'">
+                                            <b>拍卖批次：</b>{{detailGoods.auction_id}}</div>
+                                        <div class="goods-desc" v-if="dataType === 'auction'">
+                                            <b>标本编号：</b>{{detailGoods.goods_sn}}</div>
+                                        <div class="goods-desc" v-if="dataType === 'auction'"><b>当前赢价：</b><span
+                                                class="red">￥{{detailGoods.winner_price}}</span></div>
+                                        <div class="goods-desc" v-if="dataType === 'mall'"><b>单价：</b><span
+                                                class="red">￥{{detailGoods.price}}</span></div>
+                                        <div class="goods-desc"><b>平均价格：</b>￥{{detailGoods.average_mall_price}}<template
+                                                v-if="detailGoods.min_mall_price">({{detailGoods.min_mall_price}} ~
+                                                {{detailGoods.max_mall_price}})</template></div>
+                                        <div class="goods-desc">
+                                            <b>平均成本：</b>￥{{detailGoods.average_mall_usd_price}}<template
+                                                v-if="detailGoods.min_mall_usd_price">({{detailGoods.min_mall_usd_price}}
+                                                ~ {{detailGoods.max_mall_usd_price}})</template></div>
+                                        <div class="goods-desc" v-if="detailGoods.mall_num">
+                                            <b>参考数量：</b>{{detailGoods.mall_num}}</div>
                                         <div id="qr-detail">
-                                            <a :href="'https://ganvana.com/auction/item/' + detailGoods.id"
+                                            <a :href="dataType === 'auction' ? ('https://ganvana.com/auction/item/' + detailGoods.id) : ('https://ganvana.com/mall/goods/' + detailGoods.id)"
                                                 target="_blank" style="display:inline-block;">
                                                 <div id="qr-detail-inner"></div>
                                             </a>
@@ -780,26 +793,23 @@
                 }
             },
             showGoodsDetail(goods) {
-                if (this.dataType === 'auction') {
-                    this.detailGoods = goods;
-                    this.showDetail = true;
-                    this.$nextTick(() => {
-                        if (document.getElementById('qr-detail-inner')) {
-                            document.getElementById('qr-detail-inner').innerHTML = '';
-                            new QRCode("qr-detail-inner", {
-                                text: "https://wechat.ganvana.com/auction/item/" + goods.id,
-                                width: 100,
-                                height: 100,
-                                colorDark: "#000000",
-                                colorLight: "#ffffff",
-                                correctLevel: QRCode.CorrectLevel.H
-                            });
-                        }
-                    });
-                } else {
-                    // 非拍卖，正常跳转
-                    window.open('https://www.ganvana.com/mall/goods/' + goods.id, '_blank');
-                }
+                this.detailGoods = goods;
+                this.showDetail = true;
+                this.$nextTick(() => {
+                    if (document.getElementById('qr-detail-inner')) {
+                        document.getElementById('qr-detail-inner').innerHTML = '';
+                        new QRCode("qr-detail-inner", {
+                            text: this.dataType === 'auction'
+                                ? "https://wechat.ganvana.com/auction/item/" + goods.id
+                                : "https://wechat.ganvana.com/mall/goods/" + goods.id,
+                            width: 100,
+                            height: 100,
+                            colorDark: "#000000",
+                            colorLight: "#ffffff",
+                            correctLevel: QRCode.CorrectLevel.H
+                        });
+                    }
+                });
             },
         }
     });

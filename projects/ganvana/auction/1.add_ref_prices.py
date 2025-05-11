@@ -42,6 +42,34 @@ for item in tqdm(mall_data, desc="Loading mall data"):
             mall_data_dict[item_name] = {'prices': [], 'usd_prices': []}
         mall_data_dict[item_name]['prices'].append(item["price"])
         mall_data_dict[item_name]['usd_prices'].append(item["usd_price"])
+for item in tqdm(mall_data, desc="Adding mall prices"):
+    if "name" in item:
+        item_name = item["name"].replace("cf.", "").replace("aff.", "").strip()
+        if not item_name:
+            continue
+        if len(item_name.split()) > 1 and not any([key in item_name for key in IGNORE_KEYS]):
+            if any([item_name.split()[0].endswith(end) for end in SPECICE_ENDS]):
+                item_name = item_name.split()[0].strip()
+                name_changes.append(f"{item['name']}\t->\t{item_name}")
+                # print(name_changes[-1])
+            else:
+                print(item["name"])
+        if item_name and item_name in mall_data_dict:
+            item["num"] = len(mall_data_dict[item_name]['prices'])
+            item["average_mall_price"] = round(sum(mall_data_dict[item_name]['prices']) / len(mall_data_dict[item_name]['prices']), 0)
+            item["min_mall_price"] = round(min(mall_data_dict[item_name]['prices']), 0)
+            item["max_mall_price"] = round(max(mall_data_dict[item_name]['prices']), 0)
+            item["average_mall_usd_price"] = round(sum(mall_data_dict[item_name]['usd_prices']) / len(mall_data_dict[item_name]['usd_prices']), 0)
+            item["min_mall_usd_price"] = round(min(mall_data_dict[item_name]['usd_prices']), 0)
+            item["max_mall_usd_price"] = round(max(mall_data_dict[item_name]['usd_prices']), 0)
+print("Saving mall data...")
+with open(mall_jsonl_file, "w", encoding="utf-8") as f:
+    # 根据id去重并排序
+    data_dict = {item["id"]: item for item in mall_data}
+    data = sorted(data_dict.values(), key=lambda x: x["id"])
+    last_idx = data[-1]["id"] if data else 0
+    for line in data:
+        f.write(json.dumps(line, ensure_ascii=False) + "\n")
 
 for item in tqdm(auction_data, desc="Adding mall prices"):
     if item["family"] == "艺术":
@@ -62,7 +90,7 @@ for item in tqdm(auction_data, desc="Adding mall prices"):
         item["average_mall_usd_price"] = round(sum(mall_data_dict[item_name]['usd_prices']) / len(mall_data_dict[item_name]['usd_prices']), 0)
         item["min_mall_usd_price"] = round(min(mall_data_dict[item_name]['usd_prices']), 0)
         item["max_mall_usd_price"] = round(max(mall_data_dict[item_name]['usd_prices']), 0)
-
+print("Saving auction data...")
 with open(auction_jsonl_file, "w", encoding="utf-8") as f:
     # 根据id去重并排序
     data_dict = {item["id"]: item for item in auction_data}
@@ -78,7 +106,7 @@ with open(name_changes_file, "w", encoding="utf-8") as f:
 
 import gzip
 import shutil
-
+print("Compressing JSONL files...")
 auction_jsonl_file = "D:/_WangKe/scikkk.github.io/projects/ganvana/auction/getItem.jsonl"
 with open(auction_jsonl_file, 'rb') as f_in, gzip.open(auction_jsonl_file.replace('.jsonl', '.jsonl.gz'), 'wb') as f_out:
     shutil.copyfileobj(f_in, f_out)
