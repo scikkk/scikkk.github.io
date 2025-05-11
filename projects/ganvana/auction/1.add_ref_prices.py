@@ -75,3 +75,13 @@ sorted_name_changes = sorted(name_changes, key=lambda x: x.split("\t->\t")[0])
 with open(name_changes_file, "w", encoding="utf-8") as f:
     for line in sorted_name_changes:
         f.write(line + "\n")
+
+import gzip
+import shutil
+
+auction_jsonl_file = "D:/_WangKe/scikkk.github.io/projects/ganvana/auction/getItem.jsonl"
+with open(auction_jsonl_file, 'rb') as f_in, gzip.open(auction_jsonl_file.replace('.jsonl', '.jsonl.gz'), 'wb') as f_out:
+    shutil.copyfileobj(f_in, f_out)
+mall_jsonl_file = "D:/_WangKe/scikkk.github.io/projects/ganvana/mall/getGoodsInfo.jsonl"
+with open(mall_jsonl_file, 'rb') as f_in, gzip.open(mall_jsonl_file.replace('.jsonl', '.jsonl.gz'), 'wb') as f_out:
+    shutil.copyfileobj(f_in, f_out)
