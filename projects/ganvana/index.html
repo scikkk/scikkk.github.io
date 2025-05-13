@@ -255,7 +255,8 @@
                                         <div class="goods-name">{{dataType === 'auction' ? detailGoods.goods_name
                                             :detailGoods.name}}</div>
                                         <div class="goods-desc" v-if="dataType === 'mall'">
-                                            <b>标本编号：</b>{{detailGoods.sn}}</div>
+                                            <b>标本编号：</b>{{detailGoods.sn}}
+                                        </div>
                                         <div class="goods-desc"><b>学名：</b>{{detailGoods.lat_name}}</div>
                                         <div class="goods-desc"><b>科名：</b>{{detailGoods.family ||
                                             detailGoods.cate_name}}<template
@@ -265,13 +266,17 @@
                                             detailGoods.area}}</div>
                                         <div class="goods-desc"><b>尺寸：</b>{{detailGoods.size}}mm</div>
                                         <div class="goods-desc" v-if="dataType === 'mall'">
-                                            <b>品相：</b>{{detailGoods.condition}}</div>
+                                            <b>品相：</b>{{detailGoods.condition}}
+                                        </div>
                                         <div class="goods-desc" v-if="dataType === 'auction'">
-                                            <b>拍品编号：</b>{{detailGoods.id}}</div>
+                                            <b>拍品编号：</b>{{detailGoods.id}}
+                                        </div>
                                         <div class="goods-desc" v-if="dataType === 'auction'">
-                                            <b>拍卖批次：</b>{{detailGoods.auction_id}}</div>
+                                            <b>拍卖批次：</b>{{detailGoods.auction_id}}
+                                        </div>
                                         <div class="goods-desc" v-if="dataType === 'auction'">
-                                            <b>标本编号：</b>{{detailGoods.goods_sn}}</div>
+                                            <b>标本编号：</b>{{detailGoods.goods_sn}}
+                                        </div>
                                         <div class="goods-desc" v-if="dataType === 'auction'"><b>当前赢价：</b><span
                                                 class="red">￥{{detailGoods.winner_price}}</span></div>
                                         <div class="goods-desc" v-if="dataType === 'mall'"><b>单价：</b><span
@@ -282,9 +287,11 @@
                                         <div class="goods-desc">
                                             <b>平均成本：</b>￥{{detailGoods.average_mall_usd_price}}<template
                                                 v-if="detailGoods.min_mall_usd_price">({{detailGoods.min_mall_usd_price}}
-                                                ~ {{detailGoods.max_mall_usd_price}})</template></div>
+                                                ~ {{detailGoods.max_mall_usd_price}})</template>
+                                        </div>
                                         <div class="goods-desc" v-if="detailGoods.mall_num">
-                                            <b>参考数量：</b>{{detailGoods.mall_num}}</div>
+                                            <b>参考数量：</b>{{detailGoods.mall_num}}
+                                        </div>
                                         <div id="qr-detail">
                                             <a :href="dataType === 'auction' ? ('https://ganvana.com/auction/item/' + detailGoods.id) : ('https://ganvana.com/mall/goods/' + detailGoods.id)"
                                                 target="_blank" style="display:inline-block;">
@@ -296,6 +303,18 @@
                                 <div v-if="detailGoods.desc || detailGoods.content" class="goods-content">
                                     <div v-if="detailGoods.desc" class="goods-desc" v-html="detailGoods.desc"></div>
                                     <div v-if="detailGoods.content" class="page-container" v-html="detailGoods.content">
+                                    </div>
+                                    <!-- 新增更多图片展示 -->
+                                    <div v-if="detailGoods.more_img && detailGoods.more_img.length"
+                                        class="more-img-list" style="margin-top:16px;">
+                                        <div style="font-weight:600;margin-bottom:8px;">更多图片：</div>
+                                        <div style="display:flex;flex-direction:column;gap:10px;">
+                                            <a v-for="(img, idx) in detailGoods.more_img" :key="idx" :href="img"
+                                                target="_blank" style="display:block;">
+                                                <img :src="img"
+                                                    style="width:100%;max-width:100%;height:auto;object-fit:contain;border:1px solid #eee;border-radius:4px;">
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

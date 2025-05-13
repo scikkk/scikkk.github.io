@@ -56,10 +56,3 @@ for idx in tqdm(range(last_idx+1, MAX_IDX+1), desc="Downloading"):
         f.write(json.dumps(new_line, ensure_ascii=False) + "\n")
     time.sleep(0.1)
 
-
-import gzip
-import shutil
-
-mall_jsonl_file = "D:/_WangKe/scikkk.github.io/projects/ganvana/mall/getGoodsInfo.jsonl"
-with open(mall_jsonl_file, 'rb') as f_in, gzip.open(mall_jsonl_file.replace('.jsonl', '.jsonl.gz'), 'wb') as f_out:
-    shutil.copyfileobj(f_in, f_out)
