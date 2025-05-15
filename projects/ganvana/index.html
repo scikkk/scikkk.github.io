@@ -709,14 +709,14 @@
                 const uniqueGoods = that.dataType === 'auction' ? that.allAuction : that.allGoods;
                 const filteredList = uniqueGoods.filter(function (item) {
                     return Object.keys(item).length > 1 &&
-                        (!that.active_tag || item.tag === that.active_tag) &&
-                        (!that.activeCate.cate1 || item.cate1 === that.activeCate.cate1) &&
-                        (!that.activeCate.cate2 || item.cate2 === that.activeCate.cate2) &&
-                        (!that.search.sn || item.sn.includes(that.search.sn)) &&
-                        (!that.search.cate2_name || item.cate_name.includes(that.search.cate2_name)) &&
-                        (!that.search.name || item.name.includes(that.search.name)) &&
-                        (!that.search.lat_name || item.lat_name.includes(that.search.lat_name)) &&
-                        (!that.search.area || item.area.includes(that.search.area)) &&
+                        (!that.active_tag || item.tag == that.active_tag) &&
+                        (!that.activeCate.cate1 || item.cate1 == that.activeCate.cate1) &&
+                        (!that.activeCate.cate2 || item.cate2 == that.activeCate.cate2) &&
+                        (!that.search.sn || item.sn == that.search.sn) &&
+                        (!that.search.cate2_name || (item.cate_name || '').includes(that.search.cate2_name)) &&
+                        (!that.search.name || (item.name || '').includes(that.search.name)) &&
+                        (!that.search.lat_name || (item.lat_name || '').includes(that.search.lat_name)) &&
+                        (!that.search.area || (item.area || '').includes(that.search.area)) &&
                         (!that.search.low_price || item.price >= that.search.low_price) &&
                         (!that.search.high_price || item.price <= that.search.high_price) &&
                         (!that.search.status || item.status == that.search.status) &&
