@@ -167,6 +167,7 @@
                         <option value="id">ID</option>
                         <option value="price">价格</option>
                         <option value="usd_price">成本</option>
+                        <option value="cost_performance">性价比</option>
                         <option value="name">名称</option>
                         <option value="sn">标本编号</option>
                         <option value="size">尺寸</option>
@@ -725,7 +726,11 @@
                     filteredList.sort(function (a, b) {
                         let aVal = a[sortField], bVal = b[sortField];
                         // 需要数值排序的字段
-                        if (['size', 'price', 'usd_price', 'sn', 'id'].includes(sortField)) {
+                        // 新增：性价比排序
+                        if (sortField === 'cost_performance') {
+                            aVal = (Number(a.average_mall_price) || 0) / ((Number(a.price) || 1));
+                            bVal = (Number(b.average_mall_price) || 0) / ((Number(b.price) || 1));
+                        } else if (['size', 'price', 'usd_price', 'sn', 'id'].includes(sortField)) {
                             aVal = Number(aVal) || 0;
                             bVal = Number(bVal) || 0;
                         }

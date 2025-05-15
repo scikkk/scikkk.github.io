@@ -25,15 +25,13 @@ headers = {"Accept": "*/*",
 "sec-ch-ua-platform": "Windows"
 }
     
-
-MAX_IDX = 152049
+MIN_IDX = 152049
+MAX_IDX = 152262
 dir = "D:/_WangKe/scikkk.github.io/projects/ganvana/mall/getGoodsInfo"
 jsonl_file = "D:/_WangKe/scikkk.github.io/projects/ganvana/mall/getGoodsInfo.jsonl"
-# get last idx
-with open(jsonl_file, "r", encoding="utf-8") as f:
-    last_idx = json.loads(f.readlines()[-1])["id"]
-    print("last idx:", last_idx)
-for idx in tqdm(range(last_idx+1, MAX_IDX+1), desc="Downloading"):
+
+
+for idx in tqdm(range(MIN_IDX, MAX_IDX+1), desc="Downloading"):
     data = {"goods_id": str(idx)}
     headers["Referer"] = headers["Referer"].replace("<|goods_id|>", str(idx))
     for _ in range(1):
@@ -56,3 +54,20 @@ for idx in tqdm(range(last_idx+1, MAX_IDX+1), desc="Downloading"):
         f.write(json.dumps(new_line, ensure_ascii=False) + "\n")
     time.sleep(0.1)
 
+
+
+def load_jsonl(file_path):
+    data = []
+    with open(file_path, "r", encoding="utf-8") as f:
+        for line in tqdm(f, desc="Loading JSONL"):
+            if len(line) > 1:
+                new_line = json.loads(line)
+                data.append(new_line)
+    return data
+examples = load_jsonl(jsonl_file)
+# 根据id去重并排序
+examples_dict = {int(item["id"]): item for item in examples}
+examples = sorted(examples_dict.values(), key=lambda x: x["id"])
+with open(jsonl_file, "w", encoding="utf-8") as f:
+    for line in tqdm(examples, desc="Saving mall items"):
+        f.write(json.dumps(line, ensure_ascii=False) + "\n")

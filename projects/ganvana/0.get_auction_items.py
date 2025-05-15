@@ -6,8 +6,8 @@ import requests
 from tqdm import tqdm
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
-MIN_IDX = 42037 # 41929
-MAX_IDX = 42137
+MIN_IDX = 42150
+MAX_IDX = 42257
 url = "https://www.ganvana.com/auction/getItem/"
 auction_root = "D:/_WangKe/scikkk.github.io/projects/ganvana/auction/getItem"
 jsonl_file = "D:/_WangKe/scikkk.github.io/projects/ganvana/auction/getItem.jsonl"
@@ -56,10 +56,10 @@ for r, _, f in os.walk(auction_root):
     
 
 # 根据id去重并排序
-examples_dict = {item["id"]: item for item in examples}
+examples_dict = {int(item["id"]): item for item in examples}
 examples = sorted(examples_dict.values(), key=lambda x: x["id"])
 with open(jsonl_file, "w", encoding="utf-8") as f:
-    for line in examples:
+    for line in tqdm(examples, desc="Saving auction items"):
         f.write(json.dumps(line, ensure_ascii=False) + "\n")
 
 
