@@ -39,9 +39,21 @@ for item in tqdm(mall_data, desc="Loading mall data"):
             else:
                 print(item["name"])
         if item_name not in mall_data_dict:
-            mall_data_dict[item_name] = {'prices': [], 'usd_prices': []}
+            mall_data_dict[item_name] = {'prices': [], 'usd_prices': [], 'sizes': []}
         mall_data_dict[item_name]['prices'].append(item["price"])
         mall_data_dict[item_name]['usd_prices'].append(item["usd_price"])
+        sizes = item['size'].lower().replace('about', '').replace('up', '').replace('mm', '')
+        if sizes and 'micro' not in sizes and 'small' not in sizes:
+            try:
+                for split_ch in [',', '，', '、', '-', '~', ';', '；']:
+                    sizes = sizes.replace(split_ch, '|').strip('|')
+                for size in sizes.split("|"):
+                    mall_data_dict[item_name]['sizes'].append(float(size))
+            except:
+                print(f"Error parsing size for item: {item['name']}: {item['size']}: {sizes}")
+        else:
+            mall_data_dict[item_name]['sizes'].append(sizes)
+
 for item in tqdm(mall_data, desc="Adding mall prices"):
     if "name" in item:
         item_name = item["name"].replace("cf.", "").replace("aff.", "").strip()
@@ -62,6 +74,12 @@ for item in tqdm(mall_data, desc="Adding mall prices"):
             item["average_mall_usd_price"] = round(sum(mall_data_dict[item_name]['usd_prices']) / len(mall_data_dict[item_name]['usd_prices']), 0)
             item["min_mall_usd_price"] = round(min(mall_data_dict[item_name]['usd_prices']), 0)
             item["max_mall_usd_price"] = round(max(mall_data_dict[item_name]['usd_prices']), 0)
+            try:
+                item["average_mall_size"] = round(sum(mall_data_dict[item_name]['sizes']) / len(mall_data_dict[item_name]['sizes']), 1)
+                item["min_mall_size"] = round(min(mall_data_dict[item_name]['sizes']), 1)
+                item["max_mall_size"] = round(max(mall_data_dict[item_name]['sizes']), 1)
+            except:
+                item["average_mall_size"] = max(set(mall_data_dict[item_name]['sizes']), key=mall_data_dict[item_name]['sizes'].count)
 print("Saving mall data...")
 with open(mall_jsonl_file, "w", encoding="utf-8") as f:
     # 根据id去重并排序
@@ -90,6 +108,12 @@ for item in tqdm(auction_data, desc="Adding mall prices"):
         item["average_mall_usd_price"] = round(sum(mall_data_dict[item_name]['usd_prices']) / len(mall_data_dict[item_name]['usd_prices']), 0)
         item["min_mall_usd_price"] = round(min(mall_data_dict[item_name]['usd_prices']), 0)
         item["max_mall_usd_price"] = round(max(mall_data_dict[item_name]['usd_prices']), 0)
+        try:
+            item["average_mall_size"] = round(sum(mall_data_dict[item_name]['sizes']) / len(mall_data_dict[item_name]['sizes']), 1)
+            item["min_mall_size"] = round(min(mall_data_dict[item_name]['sizes']), 1)
+            item["max_mall_size"] = round(max(mall_data_dict[item_name]['sizes']), 1)
+        except:
+            item["average_mall_size"] = max(set(mall_data_dict[item_name]['sizes']), key=mall_data_dict[item_name]['sizes'].count)
 print("Saving auction data...")
 with open(auction_jsonl_file, "w", encoding="utf-8") as f:
     # 根据id去重并排序

@@ -290,6 +290,9 @@
                                                 v-if="detailGoods.min_mall_usd_price">({{detailGoods.min_mall_usd_price}}
                                                 ~ {{detailGoods.max_mall_usd_price}})</template>
                                         </div>
+                                        <div class="goods-desc"><b>平均尺寸：</b>{{detailGoods.average_mall_size}}mm<template
+                                            v-if="detailGoods.min_mall_size">({{detailGoods.min_mall_size}}
+                                            ~ {{detailGoods.max_mall_size}})</template></div>
                                         <div class="goods-desc" v-if="detailGoods.mall_num">
                                             <b>参考数量：</b>{{detailGoods.mall_num}}
                                         </div>
