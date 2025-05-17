@@ -291,13 +291,13 @@
                                                 ~ {{detailGoods.max_mall_usd_price}})</template>
                                         </div>
                                         <div class="goods-desc"><b>平均尺寸：</b>{{detailGoods.average_mall_size}}mm<template
-                                            v-if="detailGoods.min_mall_size">({{detailGoods.min_mall_size}}
-                                            ~ {{detailGoods.max_mall_size}})</template></div>
+                                                v-if="detailGoods.min_mall_size">({{detailGoods.min_mall_size}}
+                                                ~ {{detailGoods.max_mall_size}})</template></div>
                                         <div class="goods-desc" v-if="detailGoods.mall_num">
                                             <b>参考数量：</b>{{detailGoods.mall_num}}
                                         </div>
                                         <div id="qr-detail">
-                                            <a :href="dataType === 'auction' ? ('https://ganvana.com/auction/item/' + detailGoods.id) : ('https://ganvana.com/mall/goods/' + detailGoods.id)"
+                                            <a :href="detailGoods.goofish_link && detailGoods.goofish_link.trim() ? detailGoods.goofish_link : (dataType === 'auction' ? ('https://ganvana.com/auction/item/' + detailGoods.id) : ('https://ganvana.com/mall/goods/' + detailGoods.id))"
                                                 target="_blank" style="display:inline-block;">
                                                 <div id="qr-detail-inner"></div>
                                             </a>
@@ -721,7 +721,7 @@
                         (!that.search.high_price || item.price <= that.search.high_price) &&
                         (!that.search.status || item.status == that.search.status) &&
                         (!that.search.auction_id || item.auction_id == that.search.auction_id) &&
-                        (that.showArt || (item.family !== '艺术' && item.family !== '书籍' && item.cate2_name !== '艺术'));
+                        (that.showArt || (item.family !== '艺术' && item.family !== '书籍' && item.family !== '图书' && item.cate2_name !== '艺术'));
                 });
                 const sortField = that.search.sort_field || '';
                 const sortOrder = that.search.sort_order || '';
@@ -825,10 +825,13 @@
                 this.$nextTick(() => {
                     if (document.getElementById('qr-detail-inner')) {
                         document.getElementById('qr-detail-inner').innerHTML = '';
-                        new QRCode("qr-detail-inner", {
-                            text: this.dataType === 'auction'
+                        let link = goods.goofish_link && goods.goofish_link.trim()
+                            ? goods.goofish_link
+                            : (this.dataType === 'auction'
                                 ? "https://wechat.ganvana.com/auction/item/" + goods.id
-                                : "https://wechat.ganvana.com/mall/goods/" + goods.id,
+                                : "https://wechat.ganvana.com/mall/goods/" + goods.id);
+                        new QRCode("qr-detail-inner", {
+                            text: link,
                             width: 100,
                             height: 100,
                             colorDark: "#000000",
