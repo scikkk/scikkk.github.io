@@ -7,7 +7,7 @@ from tqdm import tqdm
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 MIN_IDX = 42150
-MIN_IDX = 42277
+# MIN_IDX = 42277
 MAX_IDX = 42277
 url = "https://www.ganvana.com/auction/getItem/"
 auction_root = "D:/_WangKe/scikkk.github.io/projects/ganvana/auction/getItem"
