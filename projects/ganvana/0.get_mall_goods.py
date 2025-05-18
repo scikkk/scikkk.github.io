@@ -26,6 +26,7 @@ headers = {"Accept": "*/*",
 }
     
 MIN_IDX = 152049
+MIN_IDX = 152262
 MAX_IDX = 152262
 dir = "D:/_WangKe/scikkk.github.io/projects/ganvana/mall/getGoodsInfo"
 jsonl_file = "D:/_WangKe/scikkk.github.io/projects/ganvana/mall/getGoodsInfo.jsonl"

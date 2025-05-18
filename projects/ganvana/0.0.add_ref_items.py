@@ -3,7 +3,12 @@ import time
 import json
 import shutil
 from tqdm import tqdm
-
+"""
+item['goods_link'] = "https://ganvana.com/auction/item/" + item['id']
+item['goods_link_qr'] = "https://wechat.ganvana.com/auction/item/" + item['id']        
+new_item['goods_link'] = "https://ganvana.com/mall/goods/" + item['id']
+new_item['goods_link_qr'] = "https://wechat.ganvana.com/mall/goods/" + item['id']  
+"""
 def load_jsonl(file_path):
     data = []
     with open(file_path, "r", encoding="utf-8") as f:
@@ -17,12 +22,23 @@ name_items = {}
 auction_jsonl_file = "D:/_WangKe/scikkk.github.io/projects/ganvana/auction/getItem.jsonl"
 auction_data = load_jsonl(auction_jsonl_file)
 for item in tqdm(auction_data, desc="Adding auction prices"):
+    if item['auction_id'] < 1:
+        continue
+    if 'goods_link' not in item:
+        item['goods_link'] = f"https://ganvana.com/auction/item/{item['id']}"
+    else:
+        item['goods_link'] = item['goods_link']
+    if 'goods_link_qr' not in item:
+        item['goods_link_qr'] = f"https://wechat.ganvana.com/auction/item/{item['id']}"
+    else:
+        item['goods_link_qr'] = item['goods_link_qr']
     if item['lat_name']:
         item['lat_name'] = item['lat_name'].split('(')[0].split('（')[0].strip()
     if item['lat_name'] not in name_items:
         name_items[item['lat_name']] = item
     elif item['winner_price'] > name_items[item['lat_name']]['winner_price']:
         name_items[item['lat_name']] = item
+
 mall_jsonl_file = "D:/_WangKe/scikkk.github.io/projects/ganvana/mall/getGoodsInfo.jsonl"
 mall_data = load_jsonl(mall_jsonl_file)
 for item in tqdm(mall_data, desc="Adding mall prices"):
@@ -53,6 +69,14 @@ for item in tqdm(mall_data, desc="Adding mall prices"):
         'winner_headimg': '',
         'winner_rec_id': 0
     }
+    if 'goods_link' not in item:
+        new_item['goods_link'] = f"https://ganvana.com/mall/goods/{item['id']}"
+    else:
+        new_item['goods_link'] = item['goods_link']
+    if 'goods_link_qr' not in item:
+        new_item['goods_link_qr'] = f"https://wechat.ganvana.com/mall/goods/{item['id']}"
+    else:
+        new_item['goods_link_qr'] = item['goods_link_qr']
     if new_item['lat_name'] not in name_items:
         name_items[new_item['lat_name']] = new_item
     elif new_item['winner_price'] > name_items[new_item['lat_name']]['winner_price']:
@@ -132,3 +156,5 @@ for family, items in tqdm(family_items.items(), desc="Saving familys"):
             idx += 1
         except:
             print(json.dumps(item, ensure_ascii=False, indent=4))
+
+

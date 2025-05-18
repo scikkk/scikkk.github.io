@@ -135,6 +135,12 @@
                         请使用微信扫码购买
                     </div>
                 </div>
+                <div style="display: flex; justify-content: center;">
+                    <button @click="showCypraeaList = true"
+                        style="margin-top:16px;padding:8px 16px;background:#c93f22;color:#fff;border:none;border-radius:4px;cursor:pointer;">
+                        宝螺名单
+                    </button>
+                </div>
             </nav>
             <div class="goods-wrap" id="listTop">
                 <div class="cate2-list" v-if="cate2List.length > 0">
@@ -297,7 +303,7 @@
                                             <b>参考数量：</b>{{detailGoods.mall_num}}
                                         </div>
                                         <div id="qr-detail">
-                                            <a :href="detailGoods.goofish_link && detailGoods.goofish_link.trim() ? detailGoods.goofish_link : (dataType === 'auction' ? ('https://ganvana.com/auction/item/' + detailGoods.id) : ('https://ganvana.com/mall/goods/' + detailGoods.id))"
+                                            <a :href="detailGoods.goods_link && detailGoods.goods_link.trim() ? detailGoods.goods_link : (dataType === 'auction' ? ('https://ganvana.com/auction/item/' + detailGoods.id) : ('https://ganvana.com/mall/goods/' + detailGoods.id))"
                                                 target="_blank" style="display:inline-block;">
                                                 <div id="qr-detail-inner"></div>
                                             </a>
@@ -321,6 +327,18 @@
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 宝螺名单弹窗 -->
+                    <div v-if="showCypraeaList" class="goods-detail-modal">
+                        <div class="goods-detail-content"
+                            style="width:90vw;max-width:1000px;height:80vh;max-height:90vh;display:flex;flex-direction:column;">
+                            <span class="close-btn" @click="showCypraeaList = false"
+                                style="float:right;cursor:pointer;font-size:24px;">×</span>
+                            <div style="flex:1;">
+                                <iframe src="/projects/ganvana/Cypraeidae_with_price.html"
+                                    style="width:100%;height:100%;border:none;"></iframe>
                             </div>
                         </div>
                     </div>
@@ -444,6 +462,7 @@
             allAuction: [], // 用于存储所有拍卖数据
             sideNavCollapsed: false, // ← 增加这一行
             showDetail: false,
+            showCypraeaList: false,
             detailGoods: {},
             showArt: false,
 
@@ -825,8 +844,8 @@
                 this.$nextTick(() => {
                     if (document.getElementById('qr-detail-inner')) {
                         document.getElementById('qr-detail-inner').innerHTML = '';
-                        let link = goods.goofish_link && goods.goofish_link.trim()
-                            ? goods.goofish_link
+                        let link = goods.goods_link_qr && goods.goods_link_qr.trim()
+                            ? goods.goods_link_qr
                             : (this.dataType === 'auction'
                                 ? "https://wechat.ganvana.com/auction/item/" + goods.id
                                 : "https://wechat.ganvana.com/mall/goods/" + goods.id);
