@@ -174,6 +174,7 @@
                         <option value="price">价格</option>
                         <option value="usd_price">成本</option>
                         <option value="cost_performance">性价比</option>
+                        <option value="max_mall_price">最高参考价</option> <!-- 新增 -->
                         <option value="name">名称</option>
                         <option value="sn">标本编号</option>
                         <option value="size">尺寸</option>
@@ -191,6 +192,13 @@
                         <option value="2">已售出</option>
                         <option value="0">未上架</option>
                         <option value="-1">已下架</option>
+                    </select>
+                    <select v-model="search.condition" style="margin-left: 20px;">
+                        <option value="">品相</option>
+                        <option value="GEM">GEM</option>
+                        <option value="F+++">F+++</option>
+                        <option value="F++">F++</option>
+                        <option value="F+">F+</option>
                     </select>
                     <label style="margin-left:20px;">
                         <input type="checkbox" v-model="showPrice"> 价格
@@ -437,6 +445,7 @@
                 sort_order: "",
                 status: "",
                 page_size: "",
+                condition: "" // 新增
             },
             searchAuction: {
                 sn: "",
@@ -451,6 +460,7 @@
                 status: "",
                 auction_id: "",
                 page_size: "",
+                condition: "" // 新增
             },
             jump: null,
             type: 1, // 1按列表  2搜索
@@ -740,6 +750,7 @@
                         (!that.search.high_price || item.price <= that.search.high_price) &&
                         (!that.search.status || item.status == that.search.status) &&
                         (!that.search.auction_id || item.auction_id == that.search.auction_id) &&
+                        (!that.search.condition || (item.condition || '').includes(that.search.condition)) &&
                         (that.showArt || (item.family !== '艺术' && item.family !== '书籍' && item.family !== '图书' && item.cate2_name !== '艺术'));
                 });
                 const sortField = that.search.sort_field || '';
@@ -748,10 +759,12 @@
                     filteredList.sort(function (a, b) {
                         let aVal = a[sortField], bVal = b[sortField];
                         // 需要数值排序的字段
-                        // 新增：性价比排序
                         if (sortField === 'cost_performance') {
                             aVal = (Number(a.average_mall_price) || 0) / ((Number(a.price) || 1));
                             bVal = (Number(b.average_mall_price) || 0) / ((Number(b.price) || 1));
+                        } else if (sortField === 'max_mall_price') {
+                            aVal = Number(a.max_mall_price) || 0;
+                            bVal = Number(b.max_mall_price) || 0;
                         } else if (['size', 'price', 'usd_price', 'sn', 'id'].includes(sortField)) {
                             aVal = Number(aVal) || 0;
                             bVal = Number(bVal) || 0;
