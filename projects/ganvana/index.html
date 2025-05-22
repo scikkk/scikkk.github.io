@@ -706,6 +706,10 @@
                 // 根据 dataType 选择数据源
                 const uniqueGoods = that.dataType === 'auction' ? that.allAuction : that.allGoods;
                 const filteredList = uniqueGoods.filter(function (item) {
+                    // auction_id为-1和0的不参与搜索，除非单独设置auction_id为0或者-1
+                    if (that.dataType === 'auction' && !that.search.auction_id && (item.auction_id == -1 || item.auction_id == 0)) {
+                        return false;
+                    }
                     return Object.keys(item).length > 1 &&
                         (!that.active_tag || item.tag === that.active_tag) &&
                         (!that.activeCate.cate1 || item.cate1 === that.activeCate.cate1) &&
