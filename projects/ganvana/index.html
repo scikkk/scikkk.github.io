@@ -83,10 +83,9 @@
     <!-- ...原有内容... -->
 
     <div id="app" class="container page goods" v-cloak>
-        <nav class="nav-bar" style="margin-bottom: 10px; margin-top: -16px;">
+        <nav class="nav-bar" style="margin-bottom: 0px; margin-top: -16px;">
             <ul class="container nav-list">
                 <li class="nav-item">
-
                     <a id="navIndex" href="https://www.ganvana.com/">首页</a>
                 </li>
                 <li class="nav-item">
@@ -102,7 +101,7 @@
         <div class="row">
             <nav class="side-nav" :class="{'collapsed': sideNavCollapsed}">
                 <div
-                    style="position:relative;display:flex;align-items:center;justify-content:flex-start;margin-bottom:20px;">
+                    style="position:relative;display:flex;align-items:center;justify-content:flex-start;margin-bottom:6px;margin-top: 6px;">
                     <!-- <a href="https://www.ganvana.com/" style="display:inline-block;"> -->
                     <img src="/projects/ganvana/logo.png" alt="" style="max-width: 100%; height: auto;">
                     <!-- </a> -->
@@ -129,16 +128,25 @@
                     </div>
                 </div>
                 <div class="qr"
-                    style="border: 1px solid #efefef; margin-bottom: 20px; padding: 20px 0; text-align: center;">
+                    style="border: 1px solid #efefef; margin-bottom: 0px; padding: 10px 0; text-align: center;">
                     <div id="qr" style="display: inline-block;"></div>
                     <div style="margin-top: 20px; font-weight: 600; color: #C93F22; text-align: center;">
                         请使用微信扫码购买
                     </div>
                 </div>
-                <div style="display: flex; justify-content: center;">
+                <div
+                    style="display: flex; justify-content: center; flex-direction: column; gap: 10px; margin-bottom: 0px;">
                     <button @click="showCypraeaList = true"
                         style="margin-top:16px;padding:8px 16px;background:#c93f22;color:#fff;border:none;border-radius:4px;cursor:pointer;">
                         宝螺名单
+                    </button>
+                    <button @click="goToLatest('mall')"
+                        style="padding:8px 16px;background:#c93f22;color:#fff;border:none;border-radius:4px;cursor:pointer;">
+                        最新标本
+                    </button>
+                    <button @click="goToLatest('auction')"
+                        style="padding:8px 16px;background:#c93f22;color:#fff;border:none;border-radius:4px;cursor:pointer;">
+                        最新拍卖
                     </button>
                 </div>
             </nav>
@@ -525,6 +533,13 @@
                 goodsArr.sort(() => Math.random() - 0.5);
                 that.allGoods = goodsArr;
                 if (that.dataType === 'mall') that.getGoodsList();
+                // 计算最大ID
+                that.maxMallId = goodsArr.length
+                    ? goodsArr.reduce((max, item) => {
+                        const id = Number(item.id) || 0;
+                        return id > max ? id : max;
+                    }, 0)
+                    : null;
             });
 
             // 加载压缩后的拍卖数据
@@ -553,6 +568,15 @@
                 auctionArr.sort(() => Math.random() - 0.5);
                 that.allAuction = auctionArr;
                 if (that.dataType === 'auction') that.getGoodsList();
+                // 计算最大ID
+                that.maxAuctionItemId = auctionArr.length
+                    ? auctionArr
+                        .filter(item => item.auction_id != 0 && item.auction_id != -1)
+                        .reduce((max, item) => {
+                            const id = Number(item.id) || 0;
+                            return id > max ? id : max;
+                        }, 0)
+                    : null;
             });
         },
         created: function () {
@@ -718,7 +742,7 @@
                 });
 
                 // 分页
-                const pageSize = that.search.page_size || 12;
+                const pageSize = that.search.page_size || 16;
                 const totalPage = Math.ceil(filteredList.length / pageSize);
                 const nowPage = that.pages.now_page;
                 const paginatedList = filteredList.slice((nowPage - 1) * pageSize, nowPage * pageSize);
@@ -779,7 +803,7 @@
                     });
                 }
                 // 分页
-                const pageSize = that.search.page_size || 12;
+                const pageSize = that.search.page_size || 16;
                 const nowPage = that.pages.now_page;
                 const totalPage = Math.ceil(filteredList.length / pageSize);
                 that.list = filteredList.slice((nowPage - 1) * pageSize, nowPage * pageSize);
@@ -876,6 +900,15 @@
                         });
                     }
                 });
+            },
+            goToLatest(type) {
+                if (type === 'mall') {
+                    if (!this.maxMallId) return;
+                    window.open('https://ganvana.com/mall/goods/' + (Number(this.maxMallId) + 1), '_blank');
+                } else if (type === 'auction') {
+                    if (!this.maxAuctionItemId) return;
+                    window.open('https://www.ganvana.com/auction/getItem/' + (Number(this.maxAuctionItemId) + 1), '_blank');
+                }
             },
         }
     });

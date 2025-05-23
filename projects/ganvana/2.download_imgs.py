@@ -51,13 +51,16 @@ def get_img_list_from_jsonl(file_paths=[
         "D:/_WangKe/scikkk.github.io/projects/ganvana/auction/getItem.jsonl",
         "D:/_WangKe/scikkk.github.io/projects/ganvana/mall/getGoodsInfo.jsonl",
         "D:/_WangKe/scikkk.github.io/projects/ganvana/jilu/getList.jsonl"
-    ]):
+    ],
+    auction_id=None):
     examples = []
     for file_path in file_paths:
         examples.extend(load_jsonl(file_path))
 
     img_list = []
     for example in tqdm(examples, desc="Generating image list"):
+        if auction_id and "auction_id" in example and example["auction_id"] != auction_id:
+            continue
         cur_img_list = get_img_list(example)
         img_list.extend(cur_img_list)
     cleaned_img_list = []
@@ -77,13 +80,33 @@ import os
 import requests
 from tqdm import tqdm
 from concurrent.futures import ThreadPoolExecutor
+def is_html_file(file_path):
+    try:
+        with open(file_path, 'rb') as f:
+            first_chunk = f.read(1024)
+            if first_chunk.lstrip().startswith(b'<!DOCTYPE html>'):
+                return True
+    except Exception as e:
+        print(f"Error checking file {file_path}: {e}")
+    return False
 
 def download_image(url_save_path):
     url, save_path = url_save_path
     try:
         response = requests.get(url, stream=True, timeout=60)
         if response.status_code == 200:
+            # 先读取部分内容判断是否为 HTML
+            first_chunk = next(response.iter_content(1024))
+            # 如果文件过小，则直接跳过
+            if len(first_chunk) < 128:
+                print(f"File too small, skipping {url}")
+                return
+            # 如果是 HTML，则跳过
+            if first_chunk.lstrip().startswith(b'<!DOCTYPE html>'):
+                print(f"Skip HTML content from {url}")
+                return
             with open(save_path, 'wb') as f:
+                f.write(first_chunk)  # 先写入第一块
                 for chunk in response.iter_content(1024):
                     f.write(chunk)
         else:
@@ -97,21 +120,28 @@ def imgurl2path(img_url):
         os.makedirs(os.path.dirname(img_path))
     return img_path
 
-def download_all_images(img_list_path="D:/_WangKe/scikkk.github.io/projects/ganvana/imgs/img_list.txt"):
+def download_all_images(img_list_path="D:/_WangKe/scikkk.github.io/projects/ganvana/imgs/img_list.txt", lazy=True):
     print("Loading image list...")
     with open(img_list_path, "r", encoding="utf-8") as f:
         img_list = [line.strip() for line in f.readlines()]
     url_save_path = []
     for img_url in tqdm(img_list, desc="Preparing download list"):
         img_path = imgurl2path(img_url)
-        if not os.path.exists(img_path):
-            url_save_path.append((img_url, img_path))
+        if os.path.exists(img_path) and lazy:
+            continue
+        url_save_path.append((img_url, img_path))
 
+        #     url_save_path.append((img_url, img_path))
     # max_workers = 128
     with ThreadPoolExecutor(max_workers=8) as executor:
         list(tqdm(executor.map(download_image, url_save_path), total=len(url_save_path), desc="Downloading"))
 
     
 if __name__ == "__main__":
-    get_img_list_from_jsonl()
-    download_all_images()
+    get_img_list_from_jsonl(
+        # auction_id=344,
+    )
+    download_all_images(
+        # lazy=False,
+        lazy=True,
+    )

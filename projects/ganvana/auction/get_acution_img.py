@@ -5,6 +5,16 @@ from tqdm import tqdm
 import shutil
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
+def is_html_file(file_path):
+    try:
+        with open(file_path, 'rb') as f:
+            first_chunk = f.read(1024)
+            if first_chunk.lstrip().startswith(b'<!DOCTYPE html>'):
+                return True
+    except Exception as e:
+        print(f"Error checking file {file_path}: {e}")
+    return False
+
 
 def clean_img(img):
     img = img.replace("http://", "https://").strip()
@@ -30,11 +40,6 @@ def clean_img(img):
 url = "https://www.ganvana.com/auction/getItem/"
 auction_root = "D:/_WangKe/scikkk.github.io/projects/ganvana/auction/getItem"
 jsonl_file = "D:/_WangKe/scikkk.github.io/projects/ganvana/auction/getItem.jsonl"
-
-# get last idx
-with open(jsonl_file, "r", encoding="utf-8") as f:
-    last_idx = json.loads(f.readlines()[-1])["id"]
-    print("last idx:", last_idx)
 
 
 def load_jsonl(file_path):
@@ -75,6 +80,7 @@ for example in tqdm(examples, desc="Processing"):
         if not os.path.exists(img_path):
             print(f"Image not found: {img_path}")
             continue
-        if not os.path.exists(img_dir+"/" + img_path.split("/")[-1]):
+        dst_img_path = img_dir+"/" + img_path.split("/")[-1]
+        if not os.path.exists(dst_img_path):
             print(f"Copying {img_path} to {img_dir}")
             shutil.copy2(img_path, img_dir)
