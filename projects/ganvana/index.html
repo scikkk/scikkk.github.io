@@ -127,30 +127,30 @@
                         <i class="zmdi zmdi-caret-right"></i>
                     </div>
                 </div>
+                <div style="margin-top: -10px; margin-bottom: 12px;">
+                    <button @click="showCypraeaList = true"
+                        style="margin-top:16px;width:100%;padding:8px 0;background:#c93f22;color:#fff;border:none;border-radius:4px;cursor:pointer;">
+                        宝螺名单
+                    </button>
+                </div>
+                <div style="margin-bottom: 12px;">
+                    <button @click="goToLatest('mall')"
+                        style="width:100%;padding:8px 0;background:#c93f22;color:#fff;border:none;border-radius:4px;cursor:pointer;">
+                        最新标本
+                    </button>
+                </div>
+                <div style="margin-bottom: 20px;">
+                    <button @click="goToLatest('auction')"
+                        style="width:100%;padding:8px 0;background:#c93f22;color:#fff;border:none;border-radius:4px;cursor:pointer;">
+                        最新拍卖
+                    </button>
+                </div>
                 <div class="qr"
-                    style="border: 1px solid #efefef; margin-bottom: 0px; padding: 10px 0; text-align: center;">
+                    style="border: 1px solid #efefef; margin-bottom: -10px; padding: 10px 0; text-align: center;">
                     <div id="qr" style="display: inline-block;"></div>
                     <div style="margin-top: 20px; font-weight: 600; color: #C93F22; text-align: center;">
                         请使用微信扫码购买
                     </div>
-                </div>
-                <div style="display: flex; justify-content: center; gap: 10px; margin-bottom: 10px;">
-                    <button @click="showCypraeaList = true"
-                        style="margin-top:16px;padding:8px 16px;background:#c93f22;color:#fff;border:none;border-radius:4px;cursor:pointer;">
-                        宝螺名单
-                    </button>
-                </div>
-                <div style="display: flex; justify-content: center; gap: 10px; margin-bottom: 10px;">
-                    <button @click="goToLatest('mall')"
-                        style="padding:8px 16px;background:#c93f22;color:#fff;border:none;border-radius:4px;cursor:pointer;">
-                        最新标本
-                    </button>
-                </div>
-                <div style="display: flex; justify-content: center; gap: 10px; margin-bottom: 0px;">
-                    <button @click="goToLatest('auction')"
-                        style="padding:8px 16px;background:#c93f22;color:#fff;border:none;border-radius:4px;cursor:pointer;">
-                        最新拍卖
-                    </button>
                 </div>
             </nav>
             <div class="goods-wrap" id="listTop">
