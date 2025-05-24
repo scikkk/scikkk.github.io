@@ -931,15 +931,23 @@
                     this.dataType === 'auction' &&
                     goods.auction_id &&
                     this.maxAuctionId &&
-                    Number(goods.auction_id) >= this.maxAuctionId - 4
+                    Number(goods.auction_id) > this.maxAuctionId - 2
                 ) {
-                    // 请求最新价格
-                    fetch('https://ganvana.com/auction/getItem/' + goods.id)
+                    // 用代理转发，避免CORS
+                    fetch('https://nextjs-boilerplate-kohl-zeta-87.vercel.app/api/auction-getItem?id=' + goods.id)
                         .then(res => res.json())
                         .then(data => {
                             if (data && data.goods && data.goods.winner_price !== undefined) {
                                 // 更新 winner_price
                                 this.$set(this.detailGoods, 'winner_price', data.goods.winner_price);
+                                // 同步更新 allAuction 里的对应商品
+                                const idx = this.allAuction.findIndex(item => Number(item.id) === Number(goods.id));
+                                if (idx !== -1) {
+                                    const auctionItem = this.allAuction[idx];
+                                    this.$set(auctionItem, 'winner_price', data.goods.winner_price);
+                                    this.$set(auctionItem, 'price', data.goods.winner_price);
+                                    // console.log('Updated auctionItem:', auctionItem);
+                                }
                             }
                         });
                 }
