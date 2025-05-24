@@ -229,6 +229,12 @@
                         <i class="zmdi zmdi-refresh"></i>
                     </button>
                 </div>
+                <!-- 拍卖消息显示区域 -->
+                <div v-if="dataType==='auction' && search.auction_id && auctionInfo" class="auction-info-msg"
+                    style="background:#fffbe6;border:1px solid #ffe58f;padding:12px 18px;margin-bottom:16px;border-radius:6px;color:#ad6800;">
+                    <b>拍卖批次 {{search.auction_id}}：</b>
+                    <span v-html="auctionInfo"></span>
+                </div>
                 <ul class="goods-list">
                     <li class="goods-item" v-for="goods in list">
                         <div class="goods-container">
@@ -486,7 +492,7 @@
             showCypraeaList: false,
             detailGoods: {},
             showArt: false,
-
+            auctionInfo: '', // 用于存储拍卖消息
         },
         computed: {
             search: {
@@ -745,7 +751,15 @@
                 });
 
                 // 分页
-                const pageSize = that.search.page_size || 12;
+                let pageSize = that.search.page_size || 12;
+                // 拍卖模式且设置了auction_id但未设置每页数目时，默认每页12条
+                if (
+                    that.dataType === 'auction' &&
+                    that.search.auction_id &&
+                    !that.search.page_size
+                ) {
+                    pageSize = 12;
+                }
                 const totalPage = Math.ceil(filteredList.length / pageSize);
                 const nowPage = that.pages.now_page;
                 const paginatedList = filteredList.slice((nowPage - 1) * pageSize, nowPage * pageSize);
@@ -760,11 +774,18 @@
             searchAndResetPage: function () {
                 this.pages.now_page = 1;
                 this.doSearch();
+                // 仅在拍卖模式且设置了 auction_id 时加载拍卖消息
+                if (this.dataType === 'auction' && this.searchAuction.auction_id) {
+                    this.loadAuctionInfo(this.searchAuction.auction_id);
+                } else {
+                    this.auctionInfo = '';
+                }
             },
             doSearch: function () {
                 this.type = 2;
                 this.list = [];
                 var that = this;
+                const nonShellFamilies = ['Art', 'Book', '艺术', '书籍', '书', '图书'];
                 // 根据 dataType 选择数据源
                 const uniqueGoods = that.dataType === 'auction' ? that.allAuction : that.allGoods;
                 const filteredList = uniqueGoods.filter(function (item) {
@@ -775,14 +796,20 @@
                         (!that.search.sn || item.sn == that.search.sn) &&
                         (!that.search.cate2_name || (item.cate_name || '').includes(that.search.cate2_name)) &&
                         (!that.search.name || (item.name || '').includes(that.search.name)) &&
-                        (!that.search.lat_name || (item.lat_name || '').includes(that.search.lat_name)) &&
+                        (!that.search.lat_name ||
+                            ((item.lat_name || '').replace(/[\s\t\r\n]+/g, '').toLowerCase()
+                                .includes((that.search.lat_name || '').replace(/[\s\t\r\n]+/g, '').toLowerCase()))) &&
                         (!that.search.area || (item.area || '').includes(that.search.area)) &&
                         (!that.search.low_price || item.price >= that.search.low_price) &&
                         (!that.search.high_price || item.price <= that.search.high_price) &&
                         (!that.search.status || item.status == that.search.status) &&
                         (!that.search.auction_id || item.auction_id == that.search.auction_id) &&
                         (!that.search.condition || (item.condition || '').includes(that.search.condition)) &&
-                        (that.showArt || (item.family !== '艺术' && item.family !== '书籍' && item.family !== '图书' && item.cate2_name !== '艺术'));
+                        (that.showArt ||
+                            !nonShellFamilies.includes(item.family) &&
+                            !nonShellFamilies.includes(item.lat_family) &&
+                            !nonShellFamilies.includes(item.cate2_name)
+                        )
                 });
                 const sortField = that.search.sort_field || '';
                 const sortOrder = that.search.sort_order || '';
@@ -806,7 +833,15 @@
                     });
                 }
                 // 分页
-                const pageSize = that.search.page_size || 12;
+                let pageSize = that.search.page_size || 12;
+                // 拍卖模式且设置了auction_id但未设置每页数目时，默认每页12条
+                if (
+                    that.dataType === 'auction' &&
+                    that.search.auction_id &&
+                    !that.search.page_size
+                ) {
+                    pageSize = 12;
+                }
                 const nowPage = that.pages.now_page;
                 const totalPage = Math.ceil(filteredList.length / pageSize);
                 that.list = filteredList.slice((nowPage - 1) * pageSize, nowPage * pageSize);
@@ -816,6 +851,12 @@
                     amount: filteredList.length,
                     page_size: pageSize
                 };
+                // 仅在拍卖模式且设置了 auction_id 时加载拍卖消息
+                if (this.dataType === 'auction' && this.searchAuction.auction_id) {
+                    this.loadAuctionInfo(this.searchAuction.auction_id);
+                } else {
+                    this.auctionInfo = '';
+                }
             },
             scrollToTop: function () {
                 window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -885,6 +926,23 @@
             showGoodsDetail(goods) {
                 this.detailGoods = goods;
                 this.showDetail = true;
+                // 判断是否为最近5期拍卖商品
+                if (
+                    this.dataType === 'auction' &&
+                    goods.auction_id &&
+                    this.maxAuctionId &&
+                    Number(goods.auction_id) >= this.maxAuctionId - 4
+                ) {
+                    // 请求最新价格
+                    fetch('https://ganvana.com/auction/getItem/' + goods.id)
+                        .then(res => res.json())
+                        .then(data => {
+                            if (data && data.goods && data.goods.winner_price !== undefined) {
+                                // 更新 winner_price
+                                this.$set(this.detailGoods, 'winner_price', data.goods.winner_price);
+                            }
+                        });
+                }
                 this.$nextTick(() => {
                     if (document.getElementById('qr-detail-inner')) {
                         document.getElementById('qr-detail-inner').innerHTML = '';
@@ -912,6 +970,25 @@
                     if (!this.maxAuctionItemId) return;
                     window.open('https://www.ganvana.com/auction/getItem/' + (Number(this.maxAuctionItemId) + 1), '_blank');
                 }
+            },
+            loadAuctionInfo(auctionId) {
+                if (!auctionId) {
+                    this.auctionInfo = '';
+                    return;
+                }
+                var that = this;
+                var url = '/projects/ganvana/auction/infos/' + auctionId + '.info';
+                fetch(url)
+                    .then(res => {
+                        if (!res.ok) throw new Error('not found');
+                        return res.text();
+                    })
+                    .then(txt => {
+                        that.auctionInfo = txt.replace(/\n/g, '<br>');
+                    })
+                    .catch(() => {
+                        that.auctionInfo = '';
+                    });
             },
         }
     });
