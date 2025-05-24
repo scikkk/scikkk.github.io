@@ -745,7 +745,7 @@
                 });
 
                 // 分页
-                const pageSize = that.search.page_size || 16;
+                const pageSize = that.search.page_size || 12;
                 const totalPage = Math.ceil(filteredList.length / pageSize);
                 const nowPage = that.pages.now_page;
                 const paginatedList = filteredList.slice((nowPage - 1) * pageSize, nowPage * pageSize);
@@ -806,7 +806,7 @@
                     });
                 }
                 // 分页
-                const pageSize = that.search.page_size || 16;
+                const pageSize = that.search.page_size || 12;
                 const nowPage = that.pages.now_page;
                 const totalPage = Math.ceil(filteredList.length / pageSize);
                 that.list = filteredList.slice((nowPage - 1) * pageSize, nowPage * pageSize);
