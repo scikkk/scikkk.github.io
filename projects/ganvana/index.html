@@ -162,24 +162,26 @@
                 <div class="search"
                     style="display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-start;">
                     <!-- ...输入框和下拉框... -->
-                    <input type="number" v-model="search.sn" placeholder="标本编号" @change="type2()" style="width:120px;">
-                    <input type="text" v-model="search.cate2_name" placeholder="中文科名" @change="type2()"
-                        style="width:120px;">
-                    <input type="text" v-model="search.name" placeholder="中文名" @change="type2()" style="width:120px;">
-                    <input type="text" v-model="search.lat_name" placeholder="拉丁文名" @change="type2()"
-                        style="width:120px;">
-                    <input type="text" v-model="search.area" placeholder="产地（英文）" @change="type2()"
-                        style="width:120px;">
-                    <input type="number" v-model="search.low_price" placeholder="最低价" @change="type2()"
-                        style="width:120px;">
-                    <input type="number" v-model="search.high_price" placeholder="最高价" @change="type2()"
-                        style="width:120px;">
-                    <input type="number" v-model="search.page_size" placeholder="每页显示数量" @change="type2()"
-                        style="width:120px;">
-                    <input type="number" v-model="search.auction_id" :placeholder="'最新批次: ' + maxAuctionId"
+                    <input id="search-sn" name="sn" type="number" v-model="search.sn" placeholder="标本编号"
                         @change="type2()" style="width:120px;">
-                    </button>
-                    <select v-model="search.sort_field" style="margin-left: 20px;">
+                    <input id="search-cate2_name" name="cate2_name" type="text" v-model="search.cate2_name"
+                        placeholder="中文科名" @change="type2()" style="width:120px;">
+                    <input id="search-name" name="name" type="text" v-model="search.name" placeholder="中文名"
+                        @change="type2()" style="width:120px;">
+                    <input id="search-lat_name" name="lat_name" type="text" v-model="search.lat_name" placeholder="拉丁文名"
+                        @change="type2()" style="width:120px;">
+                    <input id="search-area" name="area" type="text" v-model="search.area" placeholder="产地（英文）"
+                        @change="type2()" style="width:120px;">
+                    <input id="search-low_price" name="low_price" type="number" v-model="search.low_price"
+                        placeholder="最低价" @change="type2()" style="width:120px;">
+                    <input id="search-high_price" name="high_price" type="number" v-model="search.high_price"
+                        placeholder="最高价" @change="type2()" style="width:120px;">
+                    <input id="search-page_size" name="page_size" type="number" v-model="search.page_size"
+                        placeholder="每页显示数量" @change="type2()" style="width:120px;">
+                    <input id="search-auction_id" name="auction_id" type="number" v-model="search.auction_id"
+                        :placeholder="'最新批次: ' + maxAuctionId" @change="type2()" style="width:120px;">
+                    <select id="search-sort_field" name="sort_field" v-model="search.sort_field"
+                        style="margin-left: 20px;">
                         <option value="">排序字段</option>
                         <option value="id">ID</option>
                         <option value="price">价格</option>
@@ -192,19 +194,21 @@
                         <option value="condition">品相</option>
                         <option value="cate_name">科名</option>
                     </select>
-                    <select v-model="search.sort_order" style="margin-left: 20px;">
+                    <select id="search-sort_order" name="sort_order" v-model="search.sort_order"
+                        style="margin-left: 20px;">
                         <option value="">排序方式</option>
                         <option value="asc">升序</option>
                         <option value="desc">降序</option>
                     </select>
-                    <select v-model="search.status" style="margin-left: 20px;">
+                    <select id="search-status" name="status" v-model="search.status" style="margin-left: 20px;">
                         <option value="">商品状态</option>
                         <option value="1">可购买</option>
                         <option value="2">已售出</option>
                         <option value="0">未上架</option>
                         <option value="-1">已下架</option>
                     </select>
-                    <select v-model="search.condition" style="margin-left: 20px;">
+                    <select id="search-condition" name="condition" v-model="search.condition"
+                        style="margin-left: 20px;">
                         <option value="">品相</option>
                         <option value="GEM">GEM</option>
                         <option value="F+++">F+++</option>
@@ -266,6 +270,15 @@
                                     </div>
                                 </div>
                             </template>
+                            <template v-if="showPrice && dataType === 'auction'">
+                                <b style="font-size:22px;color:#db292d;font-weight:400;">
+                                    ￥{{goods.bids && goods.bids.length ?
+                                    goods.bids[0].now_price : '--'}}
+                                    -
+                                    {{goods.bids && goods.bids.length ?
+                                    goods.bids[0].max_price : '--'}}
+                                </b>
+                            </template>
                         </div>
                     </li>
                     <!-- 详情弹窗：支持mall和auction -->
@@ -309,8 +322,14 @@
                                         <div class="goods-desc" v-if="dataType === 'auction'">
                                             <b>标本编号：</b>{{detailGoods.goods_sn}}
                                         </div>
-                                        <div class="goods-desc" v-if="dataType === 'auction'"><b>当前赢价：</b><span
-                                                class="red">￥{{detailGoods.winner_price}}</span></div>
+                                        <div class="goods-desc" v-if="dataType === 'auction'"><b>当前赢价：</b>
+                                            <span class="red">￥{{detailGoods.winner_price}}</span>
+                                            <button @click="refreshWinnerPrice(detailGoods)"
+                                                style="margin-left:10px;padding:2px 8px;font-size:13px;background:#f5f5f5;border:1px solid #ccc;border-radius:4px;cursor:pointer;vertical-align:middle;">
+                                                <i class="zmdi zmdi-refresh"
+                                                    style="font-size:18px;vertical-align:middle;"></i>
+                                            </button>
+                                        </div>
                                         <div class="goods-desc" v-if="dataType === 'mall'"><b>单价：</b><span
                                                 class="red">￥{{detailGoods.price}}</span></div>
                                         <div class="goods-desc"><b>平均价格：</b>￥{{detailGoods.average_mall_price}}<template
@@ -338,6 +357,51 @@
                                 <div v-if="detailGoods.desc || detailGoods.content" class="goods-content">
                                     <div v-if="detailGoods.desc" class="goods-desc" v-html="detailGoods.desc"></div>
                                     <div v-if="detailGoods.content" class="page-container" v-html="detailGoods.content">
+                                    </div>
+                                    <!-- 在详情弹窗内容最末尾添加拍卖记录列表，仅在拍卖详情页显示 -->
+                                    <div class="goods-price">
+                                        <span style="display: flex; align-items: center; gap: 36px;">
+                                            <span>
+                                                当前 {{detailGoods.bids ? detailGoods.bids.length : 0}} 人
+                                                出价 {{detailGoods.bid_time}} 次
+                                            </span>
+                                            <span style="display: flex; align-items: center; gap: 6px;">
+                                                当前最高出价
+                                                <template v-if="detailGoods.bids && detailGoods.bids.length > 0">
+                                                    <img :src="detailGoods.bids[0].headimg"
+                                                        :alt="detailGoods.bids[0].nickname"
+                                                        style="height:32px;width:32px;border-radius:50%;margin-right:10px;">
+                                                    <b style="font-size:22px;color:#db292d;font-weight:400;">
+                                                        ￥{{detailGoods.bids[0].now_price}} -
+                                                        {{detailGoods.bids[0].max_price}}
+                                                    </b>
+                                                </template>
+                                                <template v-else>
+                                                    <b style="font-size:22px;color:#db292d;font-weight:400;">
+                                                        --
+                                                    </b>
+                                                </template>
+                                                <i :class="['zmdi', 'zmdi-hc-lg', showBidList ? 'zmdi-chevron-down' : 'zmdi-chevron-right']"
+                                                    style="margin-left:6px;cursor:pointer;"
+                                                    @click="showBidList = !showBidList"></i>
+                                            </span>
+                                        </span>
+                                    </div>
+                                    <div v-if="dataType === 'auction' && showDetail && detailGoods.bids && detailGoods.bids.length && showBidList"
+                                        class="auc-list" style="margin-top:24px;">
+                                        <div class="auc-list-title" style="font-weight:bold;margin-bottom:8px;">出价列表
+                                        </div>
+                                        <ul>
+                                            <li v-for="bid in detailGoods.bids" :key="bid.id"
+                                                style="display:flex;align-items:center;height:38px;line-height:38px;overflow:hidden;padding:0 10px;">
+                                                <img :src="bid.headimg" :alt="bid.nickname"
+                                                    style="height:32px;width:32px;border-radius:50%;margin-right:10px;">
+                                                <span style="flex:1;">{{bid.nickname}}</span>
+                                                <span style="flex:1;">￥{{bid.now_price}}</span>
+                                                <span style="flex:2;font-size:12px;color:#666;">{{
+                                                    formatYearMonth(detailGoods.created_at)}}年{{bid.time}}</span>
+                                            </li>
+                                        </ul>
                                     </div>
                                     <!-- 新增更多图片展示 -->
                                     <div v-if="detailGoods.more_img && detailGoods.more_img.length"
@@ -462,7 +526,8 @@
                 sort_order: "",
                 status: "",
                 page_size: "",
-                condition: "" // 新增
+                condition: "", // 新增
+                now_page: 1,
             },
             searchAuction: {
                 sn: "",
@@ -477,7 +542,8 @@
                 status: "",
                 auction_id: "",
                 page_size: "",
-                condition: "" // 新增
+                condition: "", // 新增
+                now_page: 1,
             },
             jump: null,
             type: 1, // 1按列表  2搜索
@@ -493,6 +559,7 @@
             detailGoods: {},
             showArt: false,
             auctionInfo: '', // 用于存储拍卖消息
+            showBidList: false, // 是否显示拍卖出价记录列表
         },
         computed: {
             search: {
@@ -789,6 +856,10 @@
                 // 根据 dataType 选择数据源
                 const uniqueGoods = that.dataType === 'auction' ? that.allAuction : that.allGoods;
                 const filteredList = uniqueGoods.filter(function (item) {
+                    // auction_id为-1和0的不参与搜索，除非单独设置auction_id为0或者-1
+                    if (that.dataType === 'auction' && !that.search.auction_id && (item.auction_id == -1 || item.auction_id == 0)) {
+                        return false;
+                    }
                     return Object.keys(item).length > 1 &&
                         (!that.active_tag || item.tag == that.active_tag) &&
                         (!that.activeCate.cate1 || item.cate1 == that.activeCate.cate1) &&
@@ -864,7 +935,14 @@
             switchType: function (type) {
                 this.type = 2;
                 this.dataType = type;
-                this.pages.now_page = 1;
+                // 记录now_page
+                if (type === 'auction') {
+                    this.searchAuction.now_page = this.pages.now_page;
+                    this.pages.now_page = this.searchMall.now_page || 1;
+                } else {
+                    this.searchMall.now_page = this.pages.now_page;
+                    this.pages.now_page = this.searchAuction.now_page || 1;
+                }
                 this.doSearch();
             },
             resetSearch: function () {
@@ -926,31 +1004,8 @@
             showGoodsDetail(goods) {
                 this.detailGoods = goods;
                 this.showDetail = true;
-                // 判断是否为最近5期拍卖商品
-                if (
-                    this.dataType === 'auction' &&
-                    goods.auction_id &&
-                    this.maxAuctionId &&
-                    Number(goods.auction_id) > this.maxAuctionId - 2
-                ) {
-                    // 用代理转发，避免CORS
-                    fetch('https://nextjs-boilerplate-kohl-zeta-87.vercel.app/api/auction-getItem?id=' + goods.id)
-                        .then(res => res.json())
-                        .then(data => {
-                            if (data && data.goods && data.goods.winner_price !== undefined) {
-                                // 更新 winner_price
-                                this.$set(this.detailGoods, 'winner_price', data.goods.winner_price);
-                                // 同步更新 allAuction 里的对应商品
-                                const idx = this.allAuction.findIndex(item => Number(item.id) === Number(goods.id));
-                                if (idx !== -1) {
-                                    const auctionItem = this.allAuction[idx];
-                                    this.$set(auctionItem, 'winner_price', data.goods.winner_price);
-                                    this.$set(auctionItem, 'price', data.goods.winner_price);
-                                    // console.log('Updated auctionItem:', auctionItem);
-                                }
-                            }
-                        });
-                }
+                // show bid list 默认隐藏
+                this.showBidList = false;
                 this.$nextTick(() => {
                     if (document.getElementById('qr-detail-inner')) {
                         document.getElementById('qr-detail-inner').innerHTML = '';
@@ -969,6 +1024,30 @@
                         });
                     }
                 });
+            },
+            // 新增：手动刷新当前赢价
+            refreshWinnerPrice(goods) {
+                if (
+                    this.dataType === 'auction' &&
+                    goods.auction_id &&
+                    this.maxAuctionId &&
+                    Number(goods.auction_id) > this.maxAuctionId - 2
+                ) {
+                    fetch('https://nextjs-boilerplate-kohl-zeta-87.vercel.app/api/auction-getItem?id=' + goods.id)
+                        .then(res => res.json())
+                        .then(data => {
+                            if (data && data.goods && data.goods.winner_price !== undefined) {
+                                this.$set(this.detailGoods, 'winner_price', data.goods.winner_price);
+                                // 同步更新 allAuction 里的对应商品
+                                const idx = this.allAuction.findIndex(item => Number(item.id) === Number(goods.id));
+                                if (idx !== -1) {
+                                    const auctionItem = this.allAuction[idx];
+                                    this.$set(auctionItem, 'winner_price', data.goods.winner_price);
+                                    this.$set(auctionItem, 'price', data.goods.winner_price);
+                                }
+                            }
+                        });
+                }
             },
             goToLatest(type) {
                 if (type === 'mall') {
@@ -997,6 +1076,21 @@
                     .catch(() => {
                         that.auctionInfo = '';
                     });
+            },
+            formatYearMonth(ts) {
+                if (!ts) return '';
+                const now = new Date();
+                const nowYear = now.getFullYear();
+                const nowMonth = now.getMonth() + 1; // 1-12
+                const date = new Date(Number(ts));
+                const year = date.getFullYear();
+                const month = date.getMonth() + 1;
+                // 跨年逻辑：当前1月，且创建时间为上一年12月
+                if (nowMonth === 1 && year === nowYear - 1 && month === 12) {
+                    return year - 1;
+                }
+                // 其它情况
+                return year;
             },
         }
     });

@@ -56,6 +56,25 @@ for idx in tqdm(range(MIN_IDX, MAX_IDX+1), desc="Downloading"):
     time.sleep(0.1)
 
 
+def clean_imgurl(img):
+    img = img.replace("http://", "https://").strip()
+    if img in ["undefined", "null", "None", ""] + [str(i) for i in range(100)]:
+        return ""
+    if len(img) <= 5 or '.' not in img or ' ' in img.strip():
+        print(f"Invalid image URL found: {img}")
+        return ""
+    if img.startswith("/uploads/"):
+        img = img.replace("/uploads/", "https://admin.ganvana.com/uploads/")
+    if img.startswith("https://www.ganvana.com/UploadFiles/p"):
+        img = img.replace("https://www.ganvana.com/UploadFiles/p", "https://img.ganvana.com/img/P")
+    if img.startswith("https://wechat."):
+        img = img.replace("https://wechat.", "https://admin.")
+    for num in ['one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 
+                'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen', 'twenty']:
+        if f"Pic{num}" in img and f"Pic{num}/" not in img:
+            img = img.replace(f"Pic{num}", f"Pic{num}/")
+    return img
+
 
 def load_jsonl(file_path):
     data = []
@@ -65,10 +84,20 @@ def load_jsonl(file_path):
                 new_line = json.loads(line)
                 data.append(new_line)
     return data
+
 examples = load_jsonl(jsonl_file)
 # 根据id去重并排序
 examples_dict = {int(item["id"]): item for item in examples}
 examples = sorted(examples_dict.values(), key=lambda x: x["id"])
+for example in tqdm(examples, desc="Cleaning image URLs"):
+    if "pic" in example and example["pic"]:
+        example["pic"] = clean_imgurl(example["pic"])
+    if "thumb" in example and example["thumb"]:
+        example["thumb"] = clean_imgurl(example["thumb"])
+    if "thumb_big" in example and example["thumb_big"]:
+        example["thumb_big"] = clean_imgurl(example["thumb_big"])
+    if "more_img" in example and example["more_img"]:
+        example["more_img"] = [clean_imgurl(img) for img in example["more_img"] if clean_imgurl(img)]
 with open(jsonl_file, "w", encoding="utf-8") as f:
     for line in tqdm(examples, desc="Saving mall items"):
         f.write(json.dumps(line, ensure_ascii=False) + "\n")
