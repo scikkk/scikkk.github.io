@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <link rel="stylesheet" href="/css/wowchemy.697f01b152168f0453beb35133e9d9b7.css" />
+  <link rel="icon" type="image/png" href="main.png" />
+  <title>Step-Controlled DPO: Leveraging Stepwise Errors for
+    Enhancing Mathematical Reasoning of Language Models | Ke Wang's Homepage
+  </title>
+</head>
+
+<body id="top" data-spy="scroll" data-offset="70" data-target="#TableOfContents" class="page-wrapper   "
+  data-wc-page-id="cafbfc3e2eb3badc053a7569a496a114">
+  <script src="/js/wowchemy-init.min.2da3b1fa37e894630bf6de39b1b694b3.js"></script>
+  <aside class="search-modal" id="search">
+    <div class="container">
+      <section class="search-header">
+        <div class="row no-gutters justify-content-between mb-3">
+          <div class="col-6">
+            <h1>Search</h1>
+          </div>
+          <div class="col-6 col-search-close"> <a class="js-search" href="#" aria-label="Close"><i
+                class="fas fa-times-circle text-muted" aria-hidden="true"></i></a> </div>
+        </div>
+        <div id="search-box"> <input name="q" id="search-query" placeholder="Search..." autocapitalize="off"
+            autocomplete="off" autocorrect="off" spellcheck="false" type="search" class="form-control"
+            aria-label="Search..."> </div>
+      </section>
+      <section class="section-search-results">
+        <div id="search-hits"> </div>
+      </section>
+    </div>
+  </aside>
+  <div class="page-header">
+    <nav class="navbar navbar-expand-lg navbar-light compensate-for-scrollbar" id="navbar-main">
+      <div class="container-xl">
+        <div class="d-none d-lg-inline-flex"> <a class="navbar-brand" href="/">Ke Wang's Homepage</a> </div> <button
+          type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbar-content"
+          aria-controls="navbar-content" aria-expanded="false" aria-label="Toggle navigation"> <span><i
+              class="fas fa-bars"></i></span> </button>
+        <div class="navbar-brand-mobile-wrapper d-inline-flex d-lg-none"> <a class="navbar-brand" href="/">Ke Wang&#39;s
+            Homepage</a> </div>
+        <div class="navbar-collapse main-menu-item collapse justify-content-start" id="navbar-content">
+          <ul class="navbar-nav d-md-inline-flex">
+            <li class="nav-item"> <a class="nav-link " href="/#about"><span>Home</span></a> </li>
+            <li class="nav-item"> <a class="nav-link " href="/#experiences"><span>Experiences</span></a> </li>
+            <li class="nav-item"> <a class="nav-link " href="/#featured"><span>Publications</span></a> </li>
+            <li class="nav-item"> <a class="nav-link " href="/#honors"><span>Honors</span></a>
+          </ul>
+        </div>
+        <ul class="nav-icons navbar-nav flex-row ml-auto d-flex pl-md-2">
+          <li class="nav-item"> <a class="nav-link js-search" href="#" aria-label="Search"><i class="fas fa-search"
+                aria-hidden="true"></i></a> </li>
+          <li class="nav-item dropdown theme-dropdown"> <a href="#" class="nav-link" data-toggle="dropdown"
+              aria-haspopup="true" aria-label="Display preferences"> <i class="fas fa-moon" aria-hidden="true"></i> </a>
+            <div class="dropdown-menu"> <a href="#" class="dropdown-item js-set-theme-light"> <span>Light</span> </a> <a
+                href="#" class="dropdown-item js-set-theme-dark"> <span>Dark</span> </a> <a href="#"
+                class="dropdown-item js-set-theme-auto"> <span>Automatic</span> </a> </div>
+          </li>
+        </ul>
+      </div>
+    </nav>
+  </div>
+  <div class="page-body">
+    <div class="pub">
+      <div class="article-container pt-3">
+        <h1>Step-Controlled DPO: Leveraging Stepwise Errors for
+          Enhancing Mathematical Reasoning of Language Models</h1>
+        <div class="article-metadata"> <span class="article-date"> Mar 2024 </span></div>
+      </div>
+      <div class="article-header article-container featured-image-wrapper mt-4 mb-4">
+        <div style="position: relative"> <img src="fig_pipeline.png" alt="" class="featured-image"> <span
+            class="article-header-caption">Overall
+            framework</span> </div>
+      </div>
+      <div class="article-container">
+        <h3>Abstract</h3>
+        <p class="pub-abstract">Direct Preference Optimization (DPO) has proven effective at improving the performance
+          of large language models (LLMs) on downstream tasks such as reasoning and alignment. In this work, we propose
+          Step-Controlled DPO (SCDPO), a method for automatically providing stepwise error supervision by creating
+          negative samples of mathematical reasoning rationales that start making errors at a specified step. By
+          applying these samples in DPO training, SCDPO can better align the model to avoid reasoning errors and output
+          accurate reasoning steps. Qualitative analysis of the credit assignment of SCDPO and DPO demonstrates the
+          effectiveness of SCDPO at identifying errors in mathematical solutions. We then apply SCDPO to an
+          InternLM2-20B model, resulting in a 20B model that achieves competitive scores of 88.5% on GSM8K and 58.1% on
+          MATH, rivaling all other open-source LLMs, showing the great potential of our method. The code, models and
+          data are released to inspire future work.</p>
+        <div class="row">
+          <div class="col-md-1"></div>
+          <div class="col-md-10">
+            <div class="row">
+              <div class="col-12 col-md-5 pub-row-heading">Type</div>
+              <div class="col-12 col-md-7"> <a href="/publications/#report"> Report </a> </div>
+            </div>
+          </div>
+          <div class="col-md-1"></div>
+        </div>
+        <div class="d-md-none space-below"></div>
+        <div class="row">
+          <div class="col-md-1"></div>
+          <div class="col-md-10">
+            <div class="row">
+              <div class="col-12 col-md-2 pub-row-heading">Bibtex</div>
+              <div class="col-12 col-md-10">
+                <pre><code id="bibtex-content">Loading...</code></pre>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-1"></div>
+        </div>
+        <div class="d-md-none space-below"></div>
+        <div class="space-below"></div>
+        <div class="article-style">
+          <div class="share-box">
+            <ul class="share">
+              <li> <a href="https://twitter.com/intent/tweet?url=wangk.org/publications/4_acl2024_mathgenie&text=Step-Controlled DPO: Leveraging Stepwise Errors for
+                      Enhancing Mathematical Reasoning of Language Models" target="_blank" rel="noopener"
+                  class="share-btn-twitter" aria-label="twitter"> <i class="fab fa-twitter"></i> </a> </li>
+              <li> <a href="https://www.facebook.com/sharer.php?u=wangk.org/publications/4_acl2024_mathgenie/&t=Step-Controlled DPO: Leveraging Stepwise Errors for
+                      Enhancing Mathematical Reasoning of Language Models" target="_blank" rel="noopener"
+                  class="share-btn-facebook" aria-label="facebook"> <i class="fab fa-facebook"></i> </a> </li>
+              <li> <a
+                  href="mailto:?subject=Step-Controlled DPO: Leveraging Stepwise Errors for
+                      Enhancing Mathematical Reasoning of Language Models&body=wangk.org/publications/4_acl2024_mathgenie/"
+                  target="_blank" rel="noopener" class="share-btn-email" aria-label="envelope"> <i
+                    class="fas fa-envelope"></i> </a> </li>
+              <li> <a href="https://www.linkedin.com/shareArticle?url=wangk.org/publications/4_acl2024_mathgenie/&title=Step-Controlled DPO: Leveraging Stepwise Errors for
+                      Enhancing Mathematical Reasoning of Language Models" target="_blank" rel="noopener"
+                  class="share-btn-linkedin" aria-label="linkedin-in"> <i class="fab fa-linkedin-in"></i> </a> </li>
+              <li> <a href="whatsapp://send?text=Step-Controlled DPO: Leveraging Stepwise Errors for
+                      Enhancing Mathematical Reasoning of Language Models wangk.org/publications/4_acl2024_mathgenie/"
+                  target="_blank" rel="noopener" class="share-btn-whatsapp" aria-label="whatsapp"> <i
+                    class="fab fa-whatsapp"></i> </a> </li>
+              <li> <a href="https://service.weibo.com/share/share.php?url=wangk.org/publications/4_acl2024_mathgenie/&title=Step-Controlled DPO: Leveraging Stepwise Errors for
+                      Enhancing Mathematical Reasoning of Language Models" target="_blank" rel="noopener"
+                  class="share-btn-weibo" aria-label="weibo"> <i class="fab fa-weibo"></i>
+                </a> </li>
+            </ul>
+          </div>
+          <div class="article-widget content-widget-hr">
+            <h3>Related</h3>
+            <ul>
+              <li><a href="/publications/6_iclr2025_mathcoder2/">MathCoder2: Better Math Reasoning from Continued
+                  Pretraining on Model-translated Mathematical Code</a></li>
+            </ul>
+            <ul>
+              <li><a href="/publications/4_acl2024_mathgenie/">MathGenie: Generating Synthetic Data with Question
+                  Back-translation for Enhancing Mathematical Reasoning of LLMs</a></li>
+            </ul>
+            <ul>
+              <li><a href="/publications/2_iclr2024_mathcoder">MathCoder: Seamless Code Integration in LLMs for Enhanced
+                  Mathematical Reasoning</a></li>
+            </ul>
+            <ul>
+              <li><a href="/publications/1_iclr2024_csv">Solving Challenging Math Word Problems Using GPT-4 Code
+                  Interpreter with Code-based Self-Verification</a></li>
+            </ul>
+          </div>
+          <div class="article-tags"> <a class="badge badge-light" href="/publications/">Full list</a> </div>
+        </div>
+      </div>
+    </div>
+</body>
+
+<style>
+  #bibtex-content {
+    color: #444;
+    /* 深灰色，若需纯黑可用 #000 */
+  }
+</style>
+<script>
+  fetch('cite.bib')
+    .then(response => response.text())
+    .then(text => {
+      document.getElementById('bibtex-content').textContent = text;
+    })
+    .catch(() => {
+      document.getElementById('bibtex-content').textContent = 'Failed to load BibTeX.';
+    });
+</script>
+
+</html>

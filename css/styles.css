@@ -1,0 +1,17 @@
+/* styles.css */
+.media-content {
+    display: flex;
+    align-items: flex-start;
+  }
+  
+  @media (max-width: 768px) {
+    .media-content {
+      flex-direction: column;
+    }
+  
+    .media-image {
+      margin-left: 0;
+      margin-bottom: 15px;
+    }
+  }
+  
